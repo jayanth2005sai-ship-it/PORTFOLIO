@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Y68° — Find Your Street Ballers</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <!-- Global Noise -->
+  <div class="noise-overlay"></div>
+
+  <!-- SVG Filters -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <filter id="lg-distort" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.004 0.008" numOctaves="1" result="turbulence"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="35" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- NEW HERO SECTION -->
+  <section id="new-hero-section">
+    <div class="bg-text-full">FULL</div>
+    <div class="bg-text-stack">STACK</div>
+
+    <div class="hero-center">
+      <div class="avatar-circle"></div>
+      <img src="/avatar.png" alt="Jayanth" class="avatar-img" />
+      <div class="floating-tag tag-left">Web design</div>
+      <div class="floating-tag tag-right">Web design</div>
+    </div>
+
+    <div class="hero-bottom-left">
+      <p class="greeting">Hey, I'm JAYANTH.</p>
+      <h1 class="main-title">Product, UI/UX &<br>Brand Design</h1>
+    </div>
+
+    <div class="hero-bottom-right">
+      <div class="stats-box">
+        <div class="stats-text">YEARS CRAFTING<br>DIGITAL PRODUCTS</div>
+        <div class="stats-number">5+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navbar -->
+  <nav class="navbar glass-pill">
+    <div class="nav-logo">Y68°</div>
+    <div class="nav-links">
+      <a href="#hero-section">Play</a>
+      <a href="#stats-section">Leaderboard</a>
+      <a href="#how-section">How it works</a>
+      <a href="#site-footer">About</a>
+    </div>
+    <a href="#" class="profile-btn glass-pill">
+      <div class="pulse-dot"></div> My profile
+    </a>
+  </nav>
+
+<div class="legacy-content" style="position: relative;">
+  <!-- Track for the 3D Canvas -->
+  <div class="canvas-track">
+    <canvas id="hero-canvas"></canvas>
+  </div>
+
+  <!-- SECTION 1: HERO -->
+  <section id="hero-section">
+    <!-- PH Badge -->
+    <a href="#" id="ph-badge" class="glass-card">
+      <div class="ph-logo">P</div>
+      <div class="ph-text">
+        <span class="ph-text-1">#1 Product of the Day</span>
+        <span class="ph-text-2">Product Hunt</span>
+      </div>
+    </a>
+
+
+    <!-- Event Card -->
+    <div id="event-card">
+      <div class="ec-layer ec-bend"></div>
+      <div class="ec-layer ec-face"></div>
+      <div class="ec-layer ec-edge"></div>
+      <div class="ec-content">
+        <div class="ec-org">
+          <div class="org-av grad-1"></div>
+          <div class="org-info">
+            <h5>Matthew Walker</h5>
+            <p>Organizer</p>
+          </div>
+          <div class="org-stack">
+            <div class="mini-av grad-2"></div>
+            <div class="mini-av grad-3"></div>
+            <div class="mini-av grad-4"></div>
+            <div class="mini-badge">+3</div>
+          </div>
+        </div>
+
+        <div class="ec-venue">
+          <h5>Shōten</h5>
+          <p>123 Sakura Park, Sakyo-ku, Kyoto</p>
+        </div>
+
+        <div class="ec-actions">
+          <button class="btn btn-ghost">Check on map</button>
+          <button class="btn btn-fill">Join game</button>
+        </div>
+        <div class="ec-free">✓ Free event</div>
+      </div>
+    </div>
+
+    <!-- Hero Text -->
+    <div id="hero-text">
+      <div class="hero-eyebrow">JOIN GAME</div>
+      <h1 class="hero-headline">
+        <span class="hl-line">FIND YOUR</span>
+        <span class="hl-line">STREET</span>
+        <span class="hl-line">BALLERS</span>
+      </h1>
+      <div class="brand-mark">Y68°</div>
+      <div class="pricing-strip glass-pill">
+        <span>$100 / Early Access</span>
+        <button class="pricing-btn">Get In &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Signature -->
+    <svg id="sig-wrap" width="120" height="60" viewBox="0 0 120 60">
+      <path class="sig-path sp1" d="M10,40 C30,10 50,10 60,30" />
+      <path class="sig-path sp2" d="M40,50 C60,20 80,10 90,40" />
+      <path class="sig-path sp3" d="M70,30 C90,60 110,40 115,20" />
+    </svg>
+
+    <!-- Indicators -->
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <div class="scroll-text">scroll</div>
+    </div>
+    <div class="drag-hint">&harr; drag to spin</div>
+
+    <!-- Nav Arrow -->
+    <div id="nav-arrow" class="glass-pill">&rsaquo;</div>
+  </section>
+
+  <!-- SECTION 2: STATS -->
+  <section id="stats-section">
+    <div class="bg-text-stats">STAT</div>
+    <div class="stats-left">
+      <span class="eyebrow">By The Numbers</span>
+      <h2>THE STREETS<br>ARE ALIVE.</h2>
+      <p>From Tokyo to London, Lagos to NYC &mdash; ballers are running Y68&deg; games every single day.</p>
+      
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <div class="stat-num">24K+</div>
+          <div class="stat-title">Active Ballers</div>
+          <div class="stat-badge badge-green">&uarr; +12% this month</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-num">840</div>
+          <div class="stat-title">Games This Week</div>
+          <div class="stat-badge badge-green">&uarr; +8% vs last week</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-num">62</div>
+          <div class="stat-title">Cities Worldwide</div>
+          <div class="stat-badge badge-neutral">&rarr; 5 new this quarter</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-num">4.9&starf;</div>
+          <div class="stat-title">Avg Game Rating</div>
+          <div class="stat-badge badge-green">&uarr; Consistent</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: HOW IT WORKS -->
+  <section id="how-section">
+    <div class="bg-text-how">PLAY</div>
+    <div class="how-content">
+      <span class="eyebrow">HOW IT WORKS</span>
+      <h2>THREE STEPS<br>TO THE COURT</h2>
+      
+      <div class="step-list">
+        <div class="step-item glass-card">
+          <div class="step-num">01</div>
+          <div class="step-text">
+            <h4>Find a Game</h4>
+            <p>Browse live and upcoming street games near you. Filter by skill level, location, or time slot.</p>
+          </div>
+          <div class="step-arrow">&rarr;</div>
+        </div>
+        
+        <div class="step-item glass-card">
+          <div class="step-num">02</div>
+          <div class="step-text">
+            <h4>Join or Create</h4>
+            <p>Tap to join instantly or spin up your own game in under 30 seconds. Set rules, capacity, and skill tier.</p>
+          </div>
+          <div class="step-arrow">&rarr;</div>
+        </div>
+        
+        <div class="step-item glass-card">
+          <div class="step-num">03</div>
+          <div class="step-text">
+            <h4>Build Your Rep</h4>
+            <p>Every game earns you points. Climb the city leaderboard, unlock badges, get scouted.</p>
+          </div>
+          <div class="step-arrow">&rarr;</div>
+        </div>
+      </div>
+
+      <div class="how-cta">
+        <button class="btn btn-fill">Get on the Court &rarr;</button>
+        <div class="ph-pill">
+          <div class="ph-logo">P</div>
+          <div class="ph-pill-text">
+            <div class="ph-pill-text-1">Featured on</div>
+            <div class="ph-pill-text-2">Product Hunt #1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: FOOTER -->
+  <footer id="site-footer">
+    <div class="footer-bg-ball"></div>
+    <div class="footer-inner">
+      <div class="footer-top">
+        
+        <div class="footer-brand">
+          <div class="footer-logo">Y68&deg;</div>
+          <p class="footer-tagline">The world's most premium street volleyball network.</p>
+          <div class="social-pills">
+            <a href="#" class="social-pill glass-pill">&Xopf; Twitter</a>
+            <a href="#" class="social-pill glass-pill">&#9654; Instagram</a>
+            <a href="#" class="social-pill glass-pill">in LinkedIn</a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <div class="link-col">
+            <h5>PRODUCT</h5>
+            <a href="#">Find Games</a>
+            <a href="#">Leaderboard</a>
+            <a href="#">Court Map</a>
+            <a href="#">Create Event</a>
+          </div>
+          <div class="link-col">
+            <h5>COMMUNITY</h5>
+            <a href="#">Players</a>
+            <a href="#">Teams</a>
+            <a href="#">Tournaments</a>
+            <a href="#">Rankings</a>
+          </div>
+          <div class="link-col">
+            <h5>COMPANY</h5>
+            <a href="#">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Press Kit</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+
+        <div class="footer-news glass-dark">
+          <h4>Stay in the game</h4>
+          <p>Drop your email. Get notified when games go live near you.</p>
+          <form class="news-form">
+            <input type="email" placeholder="baller@street.com" required>
+            <button type="submit">&rarr;</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-legal">
+          &copy; 2024 Y68&deg; &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a> &middot; <a href="#">Cookies</a>
+        </div>
+        <div class="ph-pill" style="background: white; color: black; border: none; padding: 4px 10px;">
+          <div class="ph-logo">P</div>
+          <div class="ph-pill-text">
+            <div class="ph-pill-text-2" style="color: black;">Product of the Day #1</div>
+          </div>
+        </div>
+        <div class="ticker-wrap">
+          <div class="ticker">
+            TOKYO &middot; KYOTO &middot; OSAKA &middot; SEOUL &middot; DUBAI &middot; NYC &middot; LONDON &middot; PARIS &middot; MUMBAI &middot; SYDNEY &middot; 
+            TOKYO &middot; KYOTO &middot; OSAKA &middot; SEOUL &middot; DUBAI &middot; NYC &middot; LONDON &middot; PARIS &middot; MUMBAI &middot; SYDNEY &middot; 
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
