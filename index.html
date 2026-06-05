@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Y68° — Find Your Street Ballers</title>
+  <title>JS° — Find Your Street Ballers</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,34 +24,9 @@
     </defs>
   </svg>
 
-  <!-- NEW HERO SECTION -->
-  <section id="new-hero-section">
-    <div class="bg-text-full">FULL</div>
-    <div class="bg-text-stack">STACK</div>
-
-    <div class="hero-center">
-      <div class="avatar-circle"></div>
-      <img src="/avatar.png" alt="Jayanth" class="avatar-img" />
-      <div class="floating-tag tag-left">Web design</div>
-      <div class="floating-tag tag-right">Web design</div>
-    </div>
-
-    <div class="hero-bottom-left">
-      <p class="greeting">Hey, I'm JAYANTH.</p>
-      <h1 class="main-title">Product, UI/UX &<br>Brand Design</h1>
-    </div>
-
-    <div class="hero-bottom-right">
-      <div class="stats-box">
-        <div class="stats-text">YEARS CRAFTING<br>DIGITAL PRODUCTS</div>
-        <div class="stats-number">5+</div>
-      </div>
-    </div>
-  </section>
-
   <!-- Navbar -->
   <nav class="navbar glass-pill">
-    <div class="nav-logo">Y68°</div>
+    <div class="nav-logo">JS°</div>
     <div class="nav-links">
       <a href="#hero-section">Play</a>
       <a href="#stats-section">Leaderboard</a>
@@ -62,6 +37,68 @@
       <div class="pulse-dot"></div> My profile
     </a>
   </nav>
+
+  <!-- NEW HERO SECTION -->
+  <section id="new-hero-section">
+    
+    <div class="velocity-container">
+      <div class="parallax">
+         <div class="scroller" data-direction="1" data-speed="1.5">
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+         </div>
+      </div>
+      <div class="parallax">
+         <div class="scroller" data-direction="-1" data-speed="1.5">
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+            <span>DEVELOPER </span>
+         </div>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="bg-text-full">FULL</div>
+      <div class="bg-text-stack">STACK</div>
+
+      <div class="hero-center">
+        <div class="avatar-circle"></div>
+        <img src="/avatar.png" alt="Jayanth" class="avatar-img" />
+        <div class="floating-tag tag-left">Web design</div>
+        <div class="floating-tag tag-right">Web design</div>
+      </div>
+
+      <div class="hero-bottom-left">
+        <p class="greeting">Hey, I'm JAYANTH.</p>
+        <h1 class="main-title">Product, UI/UX &<br>System Design</h1>
+      </div>
+
+      <div class="hero-bottom-right">
+        <div class="stats-box">
+          <div class="stats-text">YEARS CRAFTING<br>DIGITAL PRODUCTS</div>
+          <div class="stats-number">5+</div>
+        </div>
+      </div>
+    </div>
+    
+    <svg id="jayanth-sig" viewBox="0 0 500 400">
+      <!-- J and long underline -->
+      <path class="sig-draw" d="M 150 160 C 170 110 190 80 200 80 C 210 80 180 200 125 300 C 90 360 60 330 75 300 C 90 270 250 180 400 100" />
+      
+      <!-- Exact trace of the photo's 'ayanth' squiggles resting perfectly above the underline, shifted slightly right -->
+      <g transform="translate(30, -16)">
+        <path class="sig-draw" d="M 175 205 L 185 185 L 190 200 L 200 180 L 205 190 L 215 170 L 220 180 L 230 160 L 235 170 L 245 150 L 250 160 L 290 85 L 270 155" />
+        <path class="sig-draw" d="M 280 145 L 350 105" />
+      </g>
+    </svg>
+  </section>
 
 <div class="legacy-content" style="position: relative;">
   <!-- Track for the 3D Canvas -->
@@ -118,11 +155,11 @@
     <div id="hero-text">
       <div class="hero-eyebrow">JOIN GAME</div>
       <h1 class="hero-headline">
-        <span class="hl-line">FIND YOUR</span>
-        <span class="hl-line">STREET</span>
-        <span class="hl-line">BALLERS</span>
+        <span class="hl-line">CRAFTING</span>
+        <span class="hl-line">DIGITAL</span>
+        <span class="hl-line">EXPERIENCES</span>
       </h1>
-      <div class="brand-mark">Y68°</div>
+      <div class="brand-mark">JS°</div>
       <div class="pricing-strip glass-pill">
         <span>$100 / Early Access</span>
         <button class="pricing-btn">Get In &rarr;</button>
@@ -153,7 +190,7 @@
     <div class="stats-left">
       <span class="eyebrow">By The Numbers</span>
       <h2>THE STREETS<br>ARE ALIVE.</h2>
-      <p>From Tokyo to London, Lagos to NYC &mdash; ballers are running Y68&deg; games every single day.</p>
+      <p>From Tokyo to London, Lagos to NYC &mdash; ballers are running JS&deg; games every single day.</p>
       
       <div class="stats-grid">
         <div class="stat-card glass-card">
@@ -236,7 +273,7 @@
       <div class="footer-top">
         
         <div class="footer-brand">
-          <div class="footer-logo">Y68&deg;</div>
+          <div class="footer-logo">JS&deg;</div>
           <p class="footer-tagline">The world's most premium street volleyball network.</p>
           <div class="social-pills">
             <a href="#" class="social-pill glass-pill">&Xopf; Twitter</a>
@@ -281,7 +318,7 @@
 
       <div class="footer-bottom">
         <div class="footer-legal">
-          &copy; 2024 Y68&deg; &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a> &middot; <a href="#">Cookies</a>
+          &copy; 2024 JS&deg; &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a> &middot; <a href="#">Cookies</a>
         </div>
         <div class="ph-pill" style="background: white; color: black; border: none; padding: 4px 10px;">
           <div class="ph-logo">P</div>

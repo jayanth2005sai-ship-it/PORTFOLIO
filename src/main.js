@@ -184,7 +184,63 @@ function setupInteractions(canvas) {
   window.addEventListener('touchend', onPointerUp);
 }
 
+let scrollVelocity = 0;
+let scrollDirection = 1;
+
 function setupGSAP() {
+  // Track scroll velocity for marquees
+  ScrollTrigger.create({
+    trigger: document.body,
+    start: 'top top',
+    end: 'bottom bottom',
+    onUpdate: (self) => {
+      scrollVelocity = self.getVelocity();
+    }
+  });
+
+  // Signature path setup
+  const sigPaths = document.querySelectorAll('.sig-draw');
+  sigPaths.forEach(path => {
+    // Add a buffer to the length to push the round stroke cap completely off the path
+    const length = path.getTotalLength() + 20;
+    path.style.strokeDasharray = length;
+    path.style.strokeDashoffset = length;
+    path.style.opacity = 0; // Hide completely initially to prevent any dots
+  });
+
+  // Hero Card Shrink Animation
+  const heroCardTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#new-hero-section',
+      start: 'top top',
+      end: '+=150%',
+      scrub: true,
+      pin: true,
+      onUpdate: (self) => {
+        // Only show the paths once the user actually starts scrolling
+        if (self.progress > 0.01) {
+          gsap.set('.sig-draw', { opacity: 1 });
+        } else {
+          gsap.set('.sig-draw', { opacity: 0 });
+        }
+      }
+    }
+  });
+  
+  heroCardTl.to('.hero-card', {
+    scale: 0.45,
+    borderRadius: '100px',
+    ease: 'none',
+    duration: 0.8 // Finishes at 80% of the total pinned scroll
+  }, 0)
+  .to('.sig-draw', {
+    strokeDashoffset: 0,
+    ease: 'power2.out',
+    duration: 0.8,
+    stagger: 0.1
+  }, 0)
+  .to({}, { duration: 0.2 }); // Hold the fully shrunk state for the last 20%
+
   const navTl = gsap.timeline({ delay: 0.15 });
   navTl.to('.nav-logo', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.1)
        .to('.nav-links', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.15)
@@ -323,8 +379,46 @@ function onWindowResize() {
   ScrollTrigger.refresh();
 }
 
-function animate() {
+let lastTime = 0;
+function animate(time) {
   requestAnimationFrame(animate);
+  
+  const delta = time - lastTime;
+  lastTime = time;
+
+  // Marquee scroll velocity logic
+  const scrollers = document.querySelectorAll('.scroller');
+  scrollers.forEach((scroller) => {
+    let baseSpeed = parseFloat(scroller.dataset.speed || 1);
+    let dir = parseInt(scroller.dataset.direction || 1);
+    
+    // Adjust direction based on scroll velocity direction
+    if (scrollVelocity < -20) scrollDirection = -1;
+    else if (scrollVelocity > 20) scrollDirection = 1;
+
+    let velocityFactor = Math.abs(scrollVelocity) / 1000;
+    velocityFactor = Math.min(velocityFactor, 1) * 5; // map to 0-5
+
+    // moveBy incorporates base speed and scroll velocity boost
+    let moveBy = dir * baseSpeed * scrollDirection * (1 + velocityFactor) * (delta / 16);
+    
+    let currentX = parseFloat(scroller.dataset.x || 0);
+    currentX += moveBy;
+    
+    const firstSpan = scroller.firstElementChild;
+    if (firstSpan) {
+      const spanWidth = firstSpan.offsetWidth;
+      // Wrap logic
+      if (currentX <= -spanWidth) currentX += spanWidth;
+      if (currentX >= 0) currentX -= spanWidth;
+    }
+
+    scroller.dataset.x = currentX;
+    scroller.style.transform = `translateX(${currentX}px)`;
+  });
+
+  // Decay scroll velocity smoothly
+  scrollVelocity *= 0.9;
   
   if (ball) {
     if (!isDragging) {
@@ -357,6 +451,6 @@ function animate() {
 
 window.addEventListener('load', () => {
   init();
-  animate();
+  requestAnimationFrame(animate);
   ScrollTrigger.refresh();
 });

@@ -177,11 +177,84 @@ p {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: var(--cream);
-  overflow: hidden;
+  background-color: var(--ink); /* Black background */
   z-index: 10; /* Above 3D canvas */
+  display: block;
+  padding: 0;
+}
+
+.velocity-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  z-index: 0;
+  overflow: hidden;
+  color: #c9ff00; /* Lando neon green or similar */
+}
+
+.parallax {
+  position: relative;
+  overflow: hidden;
+}
+
+.scroller {
+  display: flex;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 12vw, 12rem);
+  font-weight: bold;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: #c9ff00;
+  will-change: transform;
+}
+
+.scroller span {
+  flex-shrink: 0;
+  padding-right: 2rem;
+}
+
+.hero-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  background-color: var(--cream-mid);
+  border-radius: 0px; /* Start with no border radius */
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  transform-origin: center center;
+  z-index: 1;
+}
+
+#jayanth-sig {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  width: 55vw; /* Slightly larger than the 45% shrink card */
+  height: auto;
+  z-index: 20; /* Over the hero card! */
+  pointer-events: none;
+  filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.3));
+}
+.sig-draw {
+  fill: none;
+  stroke: #c9ff00;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0; /* Hide immediately on page load to prevent FOUC (Flash of Unstyled Content) */
 }
 
 .bg-text-full, .bg-text-stack {
@@ -191,7 +264,7 @@ p {
   font-family: var(--font-display);
   font-size: clamp(8rem, 18vw, 22rem);
   letter-spacing: -2px;
-  color: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.15);
   z-index: 1;
   pointer-events: none;
 }
@@ -255,12 +328,22 @@ p {
 .tag-left {
   top: 30%;
   left: -40px;
-  transform: rotate(-12deg);
+  animation: floatLeftTag 6s ease-in-out infinite;
 }
 .tag-right {
   top: 15%;
-  right: -60px;
-  transform: rotate(15deg);
+  right: 15px;
+  animation: floatRightTag 7s ease-in-out infinite;
+}
+
+@keyframes floatLeftTag {
+  0%, 100% { transform: translateY(0) rotate(-12deg); }
+  50% { transform: translateY(-20px) rotate(-6deg); }
+}
+
+@keyframes floatRightTag {
+  0%, 100% { transform: translateY(0) rotate(15deg); }
+  50% { transform: translateY(15px) rotate(22deg); }
 }
 
 .hero-bottom-left {
