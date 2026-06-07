@@ -17,18 +17,28 @@ let autoVel = {
   x: (Math.random() - 0.5) * 0.003,
   y: BASE_SPEED + Math.random() * 0.002,
 };
-let currentSection = 'hero';
+let currentSection = 'new-hero';
 let baseScale = 1;
 let ballLoaded = false;
-let isHeroSectionVisible = false;
 
 const BALL_SCALE = 0.97;
 const FOOTER_SCALE = 0.5;
+// TUNE THESE VALUES TO PERFECTLY MATCH YOUR LAPTOP.GLB MODEL
+const LAPTOP_CONFIG = {
+  // The dimensions of the laptop screen in 3D units when scale is 1.
+  screenWidth: 2.15,
+  screenHeight: 1.25,
+  // The vertical offset of the laptop screen center from the laptop's origin
+  screenCenterY: 0.65 
+};
+
 const SECTIONS = {
-  hero:   { x:  0.5,  y: -0.45, z:  0,    scale: BALL_SCALE   },
-  stats:  { x:  2.2,  y:  0.0,  z:  0,    scale: BALL_SCALE   },
-  how:    { x: -2.2,  y:  0.0,  z:  0,    scale: BALL_SCALE   },
-  footer: { x:  2.5,  y: -1.3,  z: -2.0,  scale: FOOTER_SCALE },
+  hidden: { x: 0,   y: -1.5, z: 0,    scale: 0.1  },
+  frame:  { x: 0,   y: 0,    z: 0,    scale: 1.0  }, // Will be overwritten by onWindowResize
+  hero:   { x: 0.5, y: -0.45,z: 0,    scale: BALL_SCALE },
+  stats:  { x: 2.2, y: 0.0,  z: 0,    scale: BALL_SCALE },
+  how:    { x:-2.2, y: 0.0,  z: 0,    scale: BALL_SCALE },
+  footer: { x: 2.5, y: -1.3, z: -2.0, scale: FOOTER_SCALE },
 };
 
 function init() {
@@ -83,8 +93,8 @@ function init() {
     const size = box.getSize(new THREE.Vector3());
     baseScale = 2.4 / Math.max(size.x, size.y, size.z);
     
-    ball.scale.setScalar(baseScale * SECTIONS.hero.scale * 0.25); // Start small for animation
-    ball.position.set(SECTIONS.hero.x, SECTIONS.hero.y - 0.8, SECTIONS.hero.z); // Start low
+    ball.scale.setScalar(baseScale * SECTIONS.hidden.scale); 
+    ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z); 
     
     // Material overrides
     ball.traverse((child) => {
@@ -99,10 +109,6 @@ function init() {
     });
     scene.add(ball);
     ballLoaded = true;
-    if (isHeroSectionVisible && !ball.entrancePlayed) {
-      ballEntrance();
-      ball.entrancePlayed = true;
-    }
   }, undefined, (error) => {
     console.warn("User needs to provide laptop.glb. Proceeding with dummy cube for now.");
     // Fallback if no glb is present just so it doesn't break
@@ -110,43 +116,23 @@ function init() {
     const material = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8, metalness: 0 });
     ball = new THREE.Mesh(geometry, material);
     baseScale = 2.4;
-    ball.scale.setScalar(baseScale * SECTIONS.hero.scale * 0.25);
-    ball.position.set(SECTIONS.hero.x, SECTIONS.hero.y - 0.8, SECTIONS.hero.z);
+    ball.scale.setScalar(baseScale * SECTIONS.hidden.scale);
+    ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z);
     scene.add(ball);
     ballLoaded = true;
-    if (isHeroSectionVisible && !ball.entrancePlayed) {
-      ballEntrance();
-      ball.entrancePlayed = true;
-    }
   });
 
   setupInteractions(canvas);
   setupGSAP();
   setupScrollBall();
 
+  // Run resize once to initialize dynamic SECTIONS.frame
+  onWindowResize();
+
   window.addEventListener('resize', onWindowResize);
 }
 
-function ballEntrance() {
-  gsap.to(ball.scale, {
-    x: baseScale * SECTIONS.hero.scale,
-    y: baseScale * SECTIONS.hero.scale,
-    z: baseScale * SECTIONS.hero.scale,
-    duration: 1.3,
-    ease: 'expo.out',
-    delay: 0.5
-  });
-  
-  gsap.to(ball.position, {
-    y: SECTIONS.hero.y,
-    duration: 1.3,
-    ease: 'expo.out',
-    delay: 0.5,
-    onComplete: () => {
-      document.getElementById('hero-canvas').classList.add('drag-enabled');
-    }
-  });
-}
+
 
 function setupInteractions(canvas) {
   const onPointerDown = (e) => {
@@ -217,11 +203,24 @@ function setupGSAP() {
       scrub: true,
       pin: true,
       onUpdate: (self) => {
-        // Only show the paths once the user actually starts scrolling
         if (self.progress > 0.01) {
           gsap.set('.sig-draw', { opacity: 1 });
         } else {
           gsap.set('.sig-draw', { opacity: 0 });
+        }
+
+        if (ballLoaded && ball) {
+           let p = Math.min(self.progress / 0.8, 1);
+           p = gsap.parseEase('power2.inOut')(p);
+           
+           ball.position.x = gsap.utils.interpolate(SECTIONS.hidden.x, SECTIONS.frame.x, p);
+           ball.position.y = gsap.utils.interpolate(SECTIONS.hidden.y, SECTIONS.frame.y, p);
+           ball.position.z = gsap.utils.interpolate(SECTIONS.hidden.z, SECTIONS.frame.z, p);
+           ball.scale.setScalar(baseScale * gsap.utils.interpolate(SECTIONS.hidden.scale, SECTIONS.frame.scale, p));
+           
+           ball.rotation.x = gsap.utils.interpolate(0.3, 0.05, p); // Face forward, slight tilt
+           ball.rotation.y = 0;
+           ball.rotation.z = 0;
         }
       }
     }
@@ -250,13 +249,6 @@ function setupGSAP() {
     scrollTrigger: {
       trigger: '#hero-section',
       start: 'top 65%',
-      onEnter: () => {
-        isHeroSectionVisible = true;
-        if (ballLoaded && (!ball || !ball.entrancePlayed)) {
-          ballEntrance();
-          if (ball) ball.entrancePlayed = true;
-        }
-      }
     }
   });
   
@@ -337,7 +329,16 @@ function setupScrollBall() {
     onEnter: () => toggleDrag('hero'),
     onEnterBack: () => toggleDrag('hero'),
     onLeave: () => toggleDrag('stats'),
-    onLeaveBack: () => toggleDrag('none')
+    onLeaveBack: () => toggleDrag('new-hero')
+  });
+
+  // Frame to Hero
+  ScrollTrigger.create({
+    trigger: '#hero-section',
+    start: 'top bottom',
+    end: 'top top',
+    scrub: true,
+    onUpdate: (self) => updateBallPosition(self.progress, SECTIONS.frame, SECTIONS.hero)
   });
 
   // Hero to Stats
@@ -376,6 +377,23 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  
+  // Dynamically calculate the laptop scale to fit the 0.45 scaled hero card
+  // 3D frustum height at z=0 is approx 3.154 units (fov=32, dist=5.5). Card takes 45%.
+  const aspect = window.innerWidth / window.innerHeight;
+  const cardRequiredW = 1.4194 * aspect;
+  const cardRequiredH = 1.4194;
+  
+  // Scale the laptop so its screen perfectly contains the shrunk card
+  const scaleW = cardRequiredW / LAPTOP_CONFIG.screenWidth;
+  const scaleH = cardRequiredH / LAPTOP_CONFIG.screenHeight;
+  const scale = Math.max(scaleW, scaleH);
+  
+  SECTIONS.frame.scale = scale;
+  
+  // Shift the laptop down so the center of its screen aligns with the card (which is at Y=0)
+  SECTIONS.frame.y = -scale * LAPTOP_CONFIG.screenCenterY;
+
   ScrollTrigger.refresh();
 }
 
@@ -421,7 +439,9 @@ function animate(time) {
   scrollVelocity *= 0.9;
   
   if (ball) {
-    if (!isDragging) {
+    if (currentSection === 'new-hero') {
+      // Do not apply auto velocity while pinned
+    } else if (!isDragging) {
       // Momentum decay
       velocity.x *= DAMPING;
       velocity.y *= DAMPING;
