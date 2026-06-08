@@ -228,6 +228,7 @@ function setupGSAP() {
   
   heroCardTl.to('.hero-card', {
     scale: 0.45,
+    y: '-8.4vh',
     borderRadius: '100px',
     ease: 'none',
     duration: 0.8 // Finishes at 80% of the total pinned scroll
