@@ -625,58 +625,7 @@ const initCardSwap = () => {
     }
   ];
 
-  const swap = () => {
-    if (order.length < 2) return;
-    
-    const front = order[0];
-    const rest = order.slice(1);
-    const elFront = cards[front];
-    
-    tl = gsap.timeline();
-    
-    tl.to(elFront, {
-      y: '+=500',
-      duration: config.durDrop,
-      ease: config.ease
-    });
-    
-    tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
-    rest.forEach((idx, i) => {
-      const el = cards[idx];
-      const slot = makeSlot(i, cardDistance, verticalDistance, total);
-      tl.set(el, { zIndex: slot.zIndex }, 'promote');
-      tl.to(
-        el,
-        {
-          x: slot.x,
-          y: slot.y,
-          z: slot.z,
-          duration: config.durMove,
-          ease: config.ease
-        },
-        `promote+=${i * 0.15}`
-      );
-    });
-    
-    const backSlot = makeSlot(total - 1, cardDistance, verticalDistance, total);
-    tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
-    tl.call(() => gsap.set(elFront, { zIndex: backSlot.zIndex }), undefined, 'return');
-    tl.to(
-      elFront,
-      {
-        x: backSlot.x,
-        y: backSlot.y,
-        z: backSlot.z,
-        duration: config.durReturn,
-        ease: config.ease
-      },
-      'return'
-    );
-    
-    order = [...rest, front];
-    
-    // Animate text change
-    const newFront = order[0];
+  const updateText = (newFront) => {
     const data = projectData[newFront % projectData.length];
     
     gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p'], {
@@ -702,10 +651,73 @@ const initCardSwap = () => {
       }
     });
   };
+
+  const swap = (count = 1) => {
+    if (order.length < 2) return;
+    
+    if (tl && tl.isActive()) {
+      tl.progress(1);
+      tl.kill();
+    }
+    
+    const dropped = order.slice(0, count);
+    const rest = order.slice(count);
+    
+    tl = gsap.timeline();
+    
+    dropped.forEach((idx, i) => {
+      const el = cards[idx];
+      tl.to(el, {
+        y: '+=500',
+        duration: config.durDrop,
+        ease: config.ease
+      }, i * 0.05);
+    });
+    
+    tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
+    rest.forEach((idx, i) => {
+      const el = cards[idx];
+      const slot = makeSlot(i, cardDistance, verticalDistance, total);
+      tl.set(el, { zIndex: slot.zIndex }, 'promote');
+      tl.to(
+        el,
+        {
+          x: slot.x,
+          y: slot.y,
+          z: slot.z,
+          duration: config.durMove,
+          ease: config.ease
+        },
+        `promote+=${i * 0.1}`
+      );
+    });
+    
+    tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
+    dropped.forEach((idx, i) => {
+      const el = cards[idx];
+      const newPos = rest.length + i;
+      const backSlot = makeSlot(newPos, cardDistance, verticalDistance, total);
+      tl.call(() => gsap.set(el, { zIndex: backSlot.zIndex }), undefined, 'return');
+      tl.to(
+        el,
+        {
+          x: backSlot.x,
+          y: backSlot.y,
+          z: backSlot.z,
+          duration: config.durReturn,
+          ease: config.ease
+        },
+        `return+=${i * 0.05}`
+      );
+    });
+    
+    order = [...rest, ...dropped];
+    updateText(order[0]);
+  };
   
   // Start after a slight delay or initially
-  swap();
-  interval = setInterval(swap, delay);
+  swap(1);
+  interval = setInterval(() => swap(1), delay);
   
   container.addEventListener('mouseenter', () => {
     tl?.pause();
@@ -713,7 +725,17 @@ const initCardSwap = () => {
   });
   container.addEventListener('mouseleave', () => {
     tl?.play();
-    interval = setInterval(swap, delay);
+    interval = setInterval(() => swap(1), delay);
+  });
+
+  cards.forEach((card, originalIdx) => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+      const currentPos = order.indexOf(originalIdx);
+      if (currentPos > 0) {
+        swap(currentPos);
+      }
+    });
   });
 };
 
