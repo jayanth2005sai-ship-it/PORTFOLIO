@@ -548,3 +548,175 @@ const initClickSpark = () => {
 };
 
 initClickSpark();
+
+// --- Card Swap Logic ---
+const initCardSwap = () => {
+  const container = document.querySelector('.card-swap-container');
+  if (!container) return;
+  const cards = Array.from(container.querySelectorAll('.card'));
+  
+  const cardDistance = 60;
+  const verticalDistance = 70;
+  const delay = 5000;
+  const skewAmount = 6;
+  
+  const config = {
+    ease: 'elastic.out(0.6,0.9)',
+    durDrop: 2,
+    durMove: 2,
+    durReturn: 2,
+    promoteOverlap: 0.9,
+    returnDelay: 0.05
+  };
+  
+  const makeSlot = (i, distX, distY, total) => {
+    // Center the stack by offsetting by half the total distance
+    const offsetX = ((total - 1) * distX) / 2;
+    const offsetY = ((total - 1) * distY) / 2;
+    return {
+      x: i * distX - offsetX,
+      y: i * distY - offsetY,
+      z: -i * distX * 1.5,
+      zIndex: total - i
+    };
+  };
+  
+  const placeNow = (el, slot, skew) =>
+    gsap.set(el, {
+      x: slot.x,
+      y: slot.y,
+      z: slot.z,
+      xPercent: -50,
+      yPercent: -50,
+      skewY: skew,
+      transformOrigin: 'center center',
+      zIndex: slot.zIndex,
+      force3D: true
+    });
+    
+  const total = cards.length;
+  let order = cards.map((_, i) => i);
+  
+  cards.forEach((card, i) => placeNow(card, makeSlot(i, cardDistance, verticalDistance, total), skewAmount));
+  
+  let tl;
+  let interval;
+  
+  const projectData = [
+    {
+      eyebrow: "FEATURED WORK",
+      title: "NEXT-GEN<br>DATA PLATFORM",
+      desc: "A high-performance analytics engine processing millions of events in real-time. Built with a modern stack for lightning-fast data visualizations and deep insights."
+    },
+    {
+      eyebrow: "INFRASTRUCTURE",
+      title: "GLOBAL<br>CLOUD NETWORK",
+      desc: "Distributed server architecture ensuring 99.99% uptime. Scalable containerized microservices ready to handle traffic spikes globally."
+    },
+    {
+      eyebrow: "DATA INSIGHTS",
+      title: "PREDICTIVE<br>ANALYTICS",
+      desc: "Advanced machine learning models turning raw data into actionable intelligence. Custom dashboards tailored for executive decision-making."
+    },
+    {
+      eyebrow: "USER EXPERIENCE",
+      title: "SEAMLESS<br>INTERFACE",
+      desc: "Award-winning UI/UX design focusing on accessibility and speed. Creating intuitive workflows that users love to engage with daily."
+    }
+  ];
+
+  const swap = () => {
+    if (order.length < 2) return;
+    
+    const front = order[0];
+    const rest = order.slice(1);
+    const elFront = cards[front];
+    
+    tl = gsap.timeline();
+    
+    tl.to(elFront, {
+      y: '+=500',
+      duration: config.durDrop,
+      ease: config.ease
+    });
+    
+    tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
+    rest.forEach((idx, i) => {
+      const el = cards[idx];
+      const slot = makeSlot(i, cardDistance, verticalDistance, total);
+      tl.set(el, { zIndex: slot.zIndex }, 'promote');
+      tl.to(
+        el,
+        {
+          x: slot.x,
+          y: slot.y,
+          z: slot.z,
+          duration: config.durMove,
+          ease: config.ease
+        },
+        `promote+=${i * 0.15}`
+      );
+    });
+    
+    const backSlot = makeSlot(total - 1, cardDistance, verticalDistance, total);
+    tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
+    tl.call(() => gsap.set(elFront, { zIndex: backSlot.zIndex }), undefined, 'return');
+    tl.to(
+      elFront,
+      {
+        x: backSlot.x,
+        y: backSlot.y,
+        z: backSlot.z,
+        duration: config.durReturn,
+        ease: config.ease
+      },
+      'return'
+    );
+    
+    order = [...rest, front];
+    
+    // Animate text change
+    const newFront = order[0];
+    const data = projectData[newFront % projectData.length];
+    
+    gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p'], {
+      opacity: 0,
+      y: -10,
+      duration: 0.3,
+      stagger: 0.05,
+      onComplete: () => {
+        const eyebrowEl = document.querySelector('.how-content .eyebrow');
+        const h2El = document.querySelector('.how-content h2');
+        const pEl = document.querySelector('.how-content p');
+        
+        if (eyebrowEl) eyebrowEl.innerHTML = data.eyebrow;
+        if (h2El) h2El.innerHTML = data.title;
+        if (pEl) pEl.innerHTML = data.desc;
+        
+        gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p'], {
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          stagger: 0.05
+        });
+      }
+    });
+  };
+  
+  // Start after a slight delay or initially
+  swap();
+  interval = setInterval(swap, delay);
+  
+  container.addEventListener('mouseenter', () => {
+    tl?.pause();
+    clearInterval(interval);
+  });
+  container.addEventListener('mouseleave', () => {
+    tl?.play();
+    interval = setInterval(swap, delay);
+  });
+};
+
+window.addEventListener('load', () => {
+  initCardSwap();
+});

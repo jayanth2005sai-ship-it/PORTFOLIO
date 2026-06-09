@@ -892,9 +892,12 @@ p {
   text-align: right;
   margin-left: auto;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
-.how-content .eyebrow { margin-bottom: 1rem; display: block;}
-.how-content h2 { font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 3rem; }
+.how-content .eyebrow { margin-bottom: 0.5rem; display: block;}
+.how-content h2 { font-size: clamp(3rem, 6vw, 4rem); margin-bottom: 1rem; line-height: 1.1; }
 
 .step-list {
   display: flex;
@@ -1333,4 +1336,40 @@ p {
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference;
+}
+
+.card-swap-container {
+  position: relative;
+  margin-top: 3rem;
+  margin-left: auto;
+  perspective: 900px;
+  overflow: visible;
+}
+
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 12px;
+  border: 1px solid #fff;
+  background: #000;
+  width: 480px;
+  height: 360px;
+
+  transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (max-width: 768px) {
+  .card-swap-container {
+    transform: scale(0.75) translate(25%, 25%);
+  }
+}
+
+@media (max-width: 480px) {
+  .card-swap-container {
+    transform: scale(0.55) translate(25%, 25%);
+  }
 }
