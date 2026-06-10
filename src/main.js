@@ -218,9 +218,15 @@ function setupGSAP() {
            ball.position.z = gsap.utils.interpolate(SECTIONS.hidden.z, SECTIONS.frame.z, p);
            ball.scale.setScalar(baseScale * gsap.utils.interpolate(SECTIONS.hidden.scale, SECTIONS.frame.scale, p));
            
-           ball.rotation.x = gsap.utils.interpolate(0.3, 0.05, p); // Face forward, slight tilt
-           ball.rotation.y = 0;
-           ball.rotation.z = 0;
+           const targetX = gsap.utils.interpolate(0.3, 0.05, p);
+           gsap.to(ball.rotation, {
+             x: targetX,
+             y: 0,
+             z: 0,
+             duration: 0.8,
+             ease: 'power3.out',
+             overwrite: 'auto'
+           });
         }
       }
     }
@@ -330,7 +336,12 @@ function setupScrollBall() {
     onEnter: () => toggleDrag('hero'),
     onEnterBack: () => toggleDrag('hero'),
     onLeave: () => toggleDrag('stats'),
-    onLeaveBack: () => toggleDrag('new-hero')
+    onLeaveBack: () => {
+      toggleDrag('new-hero');
+      if (ball) {
+        gsap.to(ball.rotation, { x: 0.05, y: 0, z: 0, duration: 1.5, ease: 'power3.out', overwrite: 'auto' });
+      }
+    }
   });
 
   // Frame to Hero
