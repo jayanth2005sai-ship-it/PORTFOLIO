@@ -1340,7 +1340,7 @@ p {
 
 .card-swap-container {
   position: relative;
-  margin-top: 3rem;
+  margin-top: 8rem;
   margin-left: auto;
   perspective: 900px;
   overflow: visible;
@@ -1353,8 +1353,8 @@ p {
   border-radius: 12px;
   border: 1px solid #fff;
   background: #000;
-  width: 480px;
-  height: 360px;
+  width: 640px;
+  height: 480px;
 
   transform-style: preserve-3d;
   will-change: transform;
