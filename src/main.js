@@ -35,7 +35,7 @@ const LAPTOP_CONFIG = {
 const SECTIONS = {
   hidden: { x: 0,   y: -1.5, z: 0,    scale: 0.1  },
   frame:  { x: 0,   y: 0,    z: 0,    scale: 1.0  }, // Will be overwritten by onWindowResize
-  hero:   { x: 0.5, y: -0.45,z: 0,    scale: BALL_SCALE },
+  hero:   { x: 0.0, y: -0.45,z: 0,    scale: BALL_SCALE },
   stats:  { x: 2.2, y: 0.0,  z: 0,    scale: BALL_SCALE },
   how:    { x:-2.2, y: 0.0,  z: 0,    scale: BALL_SCALE },
   footer: { x: 2.5, y: -1.3, z: -2.0, scale: FOOTER_SCALE },
