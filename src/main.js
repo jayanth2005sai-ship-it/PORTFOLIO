@@ -339,6 +339,16 @@ function setupScrollBall() {
     onLeaveBack: () => {
       toggleDrag('new-hero');
       if (ball) {
+        ball.rotation.x %= 2 * Math.PI;
+        ball.rotation.y %= 2 * Math.PI;
+        ball.rotation.z %= 2 * Math.PI;
+        if (ball.rotation.x > Math.PI) ball.rotation.x -= 2 * Math.PI;
+        else if (ball.rotation.x < -Math.PI) ball.rotation.x += 2 * Math.PI;
+        if (ball.rotation.y > Math.PI) ball.rotation.y -= 2 * Math.PI;
+        else if (ball.rotation.y < -Math.PI) ball.rotation.y += 2 * Math.PI;
+        if (ball.rotation.z > Math.PI) ball.rotation.z -= 2 * Math.PI;
+        else if (ball.rotation.z < -Math.PI) ball.rotation.z += 2 * Math.PI;
+        
         gsap.to(ball.rotation, { x: 0.05, y: 0, z: 0, duration: 1.5, ease: 'power3.out', overwrite: 'auto' });
       }
     }
