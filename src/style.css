@@ -7,7 +7,8 @@
   --ink-muted: #555;
   --ink-faint: #999;
   --white: #ffffff;
-  --accent: #ff6b00;
+  --accent: #c9ff00;
+  --neon-green: #c9ff00;
   --gold: #f4c430;
   --silver: #c0c0c0;
   --bronze: #cd7f32;
@@ -143,7 +144,8 @@ p {
   transition: background 0.2s;
 }
 .nav-links a:hover {
-  background: rgba(0,0,0,0.07);
+  background: var(--neon-green);
+  color: var(--ink);
 }
 
 .profile-btn {
@@ -161,15 +163,15 @@ p {
 .pulse-dot {
   width: 8px;
   height: 8px;
-  background: #10b981;
+  background: var(--neon-green);
   border-radius: 50%;
   animation: pulse-ring 2s infinite;
 }
 
 @keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(201, 255, 0, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(201, 255, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 255, 0, 0); }
 }
 
 /* NEW HERO SECTION */
@@ -643,7 +645,7 @@ p {
 .btn-ghost { background: rgba(0,0,0,0.05); color: var(--ink); }
 .btn-ghost:hover { background: rgba(0,0,0,0.1); }
 .btn-fill { background: var(--ink); color: white; }
-.btn-fill:hover { background: var(--ink-soft); }
+.btn-fill:hover { background: var(--neon-green); color: var(--ink); }
 .ec-free { text-align: center; font-size: 0.7rem; color: var(--ink-muted); margin-bottom: 8px; }
 
 /* Hero Text */
@@ -712,6 +714,11 @@ p {
   font-size: 0.8rem;
   border: none;
   cursor: pointer;
+  transition: all 0.2s;
+}
+.pricing-btn:hover {
+  background: var(--neon-green);
+  color: var(--ink);
 }
 
 /* Signature SVG */
@@ -859,7 +866,7 @@ p {
   font-size: 0.7rem;
   font-weight: 600;
 }
-.badge-green { background: rgba(16,185,129,0.15); color: #047857; }
+.badge-green { background: var(--ink); color: var(--neon-green); }
 .badge-neutral { background: rgba(0,0,0,0.05); color: var(--ink-muted); }
 
 /* SECTION 4 - HOW IT WORKS */
@@ -1209,9 +1216,10 @@ p {
   border: 1px solid rgba(255,255,255,0.05);
 }
 .social-pill:hover {
-  background: rgba(255,255,255,0.9);
+  background: var(--neon-green);
   color: var(--ink);
   transform: translateY(-2px);
+  border-color: var(--neon-green);
 }
 
 .footer-links {
@@ -1227,7 +1235,7 @@ p {
   transition: all 0.2s;
 }
 .link-col a:hover {
-  color: white;
+  color: var(--neon-green);
   transform: translateX(4px);
 }
 
@@ -1261,6 +1269,10 @@ p {
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
+  transition: background 0.2s;
+}
+.news-form button:hover {
+  background: var(--neon-green);
 }
 
 .footer-bottom {
