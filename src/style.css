@@ -263,7 +263,6 @@ p {
 .bg-text-full, .bg-text-stack {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   font-family: var(--font-display);
   font-size: clamp(8rem, 18vw, 22rem);
   letter-spacing: -2px;
@@ -272,17 +271,21 @@ p {
   pointer-events: none;
 }
 .bg-text-full {
-  left: 6%;
+  left: 50%;
+  transform: translate(-100%, -50%);
+  padding-right: 300px;
 }
 .bg-text-stack {
-  right: 0%;
+  left: 50%;
+  transform: translate(0%, -50%);
+  padding-left: 230px;
 }
 
 .hero-center {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -45%);
+  transform: translate(-50%, -50%);
   width: 650px;
   height: 650px;
   z-index: 2;
@@ -295,7 +298,7 @@ p {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-55%, -50%);
   width: 520px;
   height: 520px;
   background: var(--ink);
@@ -309,7 +312,7 @@ p {
   z-index: 2;
   width: 440px;
   height: auto;
-  transform: translateY(-90px);
+  transform: translate(-30px, -75px);
   border-radius: 0 0 220px 220px;
   -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
@@ -353,7 +356,7 @@ p {
 
 .hero-bottom-left {
   position: absolute;
-  bottom: 4rem;
+  bottom: 2.5rem;
   left: 3.5rem;
   z-index: 5;
 }
@@ -375,7 +378,7 @@ p {
 
 .hero-bottom-right {
   position: absolute;
-  bottom: 4rem;
+  bottom: 2.5rem;
   right: 3.5rem;
   z-index: 5;
 }
