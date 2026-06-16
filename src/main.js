@@ -505,7 +505,7 @@ const initClickSpark = () => {
   
   let sparks = [];
   
-  const sparkColor = '#c9ff00'; 
+  const sparkColor = '#ffffff'; 
   const sparkSize = 15;
   const sparkRadius = 25;
   const sparkCount = 8;
