@@ -575,8 +575,8 @@ const initCardSwap = () => {
   if (!container) return;
   const cards = Array.from(container.querySelectorAll('.card'));
   
-  const cardDistance = 80;
-  const verticalDistance = 90;
+  const cardDistance = 60;
+  const verticalDistance = -70;
   const delay = 5000;
   const skewAmount = 6;
   
