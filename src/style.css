@@ -866,6 +866,7 @@ p {
   gap: 6rem;
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 .bg-text-how {
   position: absolute;
@@ -947,7 +948,7 @@ p {
 
 /* FOOTER */
 #site-footer {
-  background: var(--ink);
+  background: transparent;
   color: rgba(255,255,255,0.75);
   padding: 10rem 4rem 1rem;
   min-height: 100vh;
@@ -1182,7 +1183,7 @@ p {
 
 /* FOOTER */
 #site-footer {
-  background: var(--ink);
+  background: transparent;
   color: rgba(255,255,255,0.75);
   padding: 10rem 4rem 1rem;
   min-height: 100vh;
