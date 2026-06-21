@@ -464,12 +464,12 @@ p {
   pointer-events: none;
 }
 
-#hero-canvas.drag-enabled {
+#hero-canvas.drag-enabled.is-hovering {
   pointer-events: all;
   cursor: grab;
 }
 
-#hero-canvas.drag-enabled:active {
+#hero-canvas.drag-enabled.is-hovering:active {
   cursor: grabbing;
 }
 

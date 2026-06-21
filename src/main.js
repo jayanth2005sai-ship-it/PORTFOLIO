@@ -135,17 +135,49 @@ function init() {
 
 
 function setupInteractions(canvas) {
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
   const onPointerDown = (e) => {
     if (currentSection !== 'hero' || !canvas.classList.contains('drag-enabled')) return;
+    
+    const clientX = e.clientX ?? e.touches[0].clientX;
+    const clientY = e.clientY ?? e.touches[0].clientY;
+
+    if (ball) {
+      mouse.x = (clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObject(ball, true);
+      if (intersects.length === 0) return; // Only allow interaction if clicking the model
+    }
+
     isDragging = true;
-    previousMousePosition = { x: e.clientX ?? e.touches[0].clientX, y: e.clientY ?? e.touches[0].clientY };
+    previousMousePosition = { x: clientX, y: clientY };
     velocity = { x: 0, y: 0 };
   };
 
   const onPointerMove = (e) => {
-    if (!isDragging) return;
     const clientX = e.clientX ?? e.touches[0].clientX;
     const clientY = e.clientY ?? e.touches[0].clientY;
+
+    if (currentSection === 'hero' && canvas.classList.contains('drag-enabled')) {
+      if (ball) {
+        mouse.x = (clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(ball, true);
+        if (intersects.length > 0 || isDragging) {
+          canvas.classList.add('is-hovering');
+        } else {
+          canvas.classList.remove('is-hovering');
+        }
+      }
+    } else {
+      canvas.classList.remove('is-hovering');
+    }
+
+    if (!isDragging) return;
     
     velocity.x = (clientY - previousMousePosition.y) * 0.006;
     velocity.y = (clientX - previousMousePosition.x) * 0.006;
