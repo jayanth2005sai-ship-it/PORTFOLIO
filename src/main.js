@@ -415,11 +415,17 @@ function setupScrollBall() {
   });
 
   // How to Footer
+  const footerVelocityAnim = gsap.fromTo('.velocity-content',
+    { scale: 1, x: '0vw', y: '0vh' },
+    { scale: 0.4, x: '25vw', y: '25vh', ease: 'none' }
+  );
+
   ScrollTrigger.create({
     trigger: '#site-footer',
-    start: 'top bottom',
+    start: 'top center',
     end: 'top top',
     scrub: 2,
+    animation: footerVelocityAnim,
     onUpdate: (self) => updateBallPosition(self.progress, SECTIONS.how, SECTIONS.footer),
     onEnter: () => toggleDrag('footer'),
     onLeaveBack: () => toggleDrag('how')
@@ -768,7 +774,7 @@ const initCardSwap = () => {
   };
   
   // Start after a slight delay or initially
-  swap(1);
+  updateText(order[0]);
   interval = setInterval(() => swap(1), delay);
   
   container.addEventListener('mouseenter', () => {
