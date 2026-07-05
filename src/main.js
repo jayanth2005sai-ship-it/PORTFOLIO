@@ -82,8 +82,12 @@ function init() {
   const loader = new GLTFLoader();
   loader.setDRACOLoader(dracoLoader);
 
+  // Check if we are on a mobile device to determine which model to load
+  const isMobile = window.innerWidth <= 768;
+  const modelPath = isMobile ? '/models/mobile.glb' : '/models/laptop.glb';
+
   // Use a simple geometry as fallback if model isn't there, or just load nothing and wait for user
-  loader.load('/models/laptop.glb', (gltf) => {
+  loader.load(modelPath, (gltf) => {
     ball = gltf.scene;
     // Center the model
     const box = new THREE.Box3().setFromObject(ball);

@@ -1413,3 +1413,60 @@ p {
     transform: scale(0.55) translate(25%, 25%);
   }
 }
+
+/* Mobile Alignment Fixes for New Hero Section */
+@media (max-width: 900px) {
+  .hero-center {
+    transform: translate(-50%, -50%) scale(0.55);
+  }
+  .hero-bottom-left {
+    left: 2rem;
+    bottom: 2rem;
+  }
+  .hero-bottom-right {
+    right: 2rem;
+    bottom: 2rem;
+  }
+  .bg-text-full, .bg-text-stack {
+    font-size: clamp(6.5rem, 18vw, 12rem);
+  }
+  .bg-text-full { padding-right: 150px; }
+  .bg-text-stack { padding-left: 100px; }
+}
+
+@media (max-width: 600px) {
+  .hero-center {
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  .bg-text-full { padding-right: 30px; }
+  .bg-text-stack { padding-left: 20px; }
+  .hero-bottom-left {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 7.5rem;
+    text-align: center;
+    width: 100%;
+  }
+  .hero-bottom-right {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 1.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .main-title {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+  }
+  .stats-box {
+    padding: 1rem 1.25rem;
+    gap: 1rem;
+  }
+  .stats-number {
+    font-size: 2.5rem;
+  }
+  #jayanth-sig {
+    width: 80vw;
+  }
+}
