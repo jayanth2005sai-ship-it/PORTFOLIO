@@ -8,6 +8,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 let scene, camera, renderer, ball;
+let isMobile = false;
 let isDragging = false;
 let previousMousePosition = { x: 0, y: 0 };
 let velocity = { x: 0, y: 0 };
@@ -23,13 +24,21 @@ let ballLoaded = false;
 
 const BALL_SCALE = 0.97;
 const FOOTER_SCALE = 0.5;
-// TUNE THESE VALUES TO PERFECTLY MATCH YOUR LAPTOP.GLB MODEL
 const LAPTOP_CONFIG = {
   // The dimensions of the laptop screen in 3D units when scale is 1.
   screenWidth: 2.15,
   screenHeight: 1.25,
   // The vertical offset of the laptop screen center from the laptop's origin
   screenCenterY: 0.65 
+};
+
+// TUNE THESE VALUES TO PERFECTLY MATCH YOUR MOBILE.GLB MODEL
+const MOBILE_CONFIG = {
+  // The dimensions of the mobile screen in 3D units when scale is 1.
+  screenWidth: 1.05,
+  screenHeight: 2.25,
+  // The vertical offset of the mobile screen center from the model's origin
+  screenCenterY: 0.0 
 };
 
 const SECTIONS = {
@@ -83,7 +92,7 @@ function init() {
   loader.setDRACOLoader(dracoLoader);
 
   // Check if we are on a mobile device to determine which model to load
-  const isMobile = window.innerWidth <= 768;
+  isMobile = window.innerWidth <= 768;
   const modelPath = isMobile ? '/models/mobile.glb' : '/models/laptop.glb';
 
   // Use a simple geometry as fallback if model isn't there, or just load nothing and wait for user
@@ -99,6 +108,7 @@ function init() {
     
     ball.scale.setScalar(baseScale * SECTIONS.hidden.scale); 
     ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z); 
+    if (isMobile) ball.rotation.y = Math.PI;
     
     // Material overrides
     ball.traverse((child) => {
@@ -257,7 +267,7 @@ function setupGSAP() {
            const targetX = gsap.utils.interpolate(0.3, 0.05, p);
            gsap.to(ball.rotation, {
              x: targetX,
-             y: 0,
+             y: isMobile ? Math.PI : 0,
              z: 0,
              duration: 0.8,
              ease: 'power3.out',
@@ -374,17 +384,22 @@ function setupScrollBall() {
     onLeaveBack: () => {
       toggleDrag('new-hero');
       if (ball) {
+        const targetY = isMobile ? Math.PI : 0;
+
         ball.rotation.x %= 2 * Math.PI;
         ball.rotation.y %= 2 * Math.PI;
         ball.rotation.z %= 2 * Math.PI;
+        
         if (ball.rotation.x > Math.PI) ball.rotation.x -= 2 * Math.PI;
         else if (ball.rotation.x < -Math.PI) ball.rotation.x += 2 * Math.PI;
-        if (ball.rotation.y > Math.PI) ball.rotation.y -= 2 * Math.PI;
-        else if (ball.rotation.y < -Math.PI) ball.rotation.y += 2 * Math.PI;
+        
+        while (ball.rotation.y > targetY + Math.PI) ball.rotation.y -= 2 * Math.PI;
+        while (ball.rotation.y < targetY - Math.PI) ball.rotation.y += 2 * Math.PI;
+        
         if (ball.rotation.z > Math.PI) ball.rotation.z -= 2 * Math.PI;
         else if (ball.rotation.z < -Math.PI) ball.rotation.z += 2 * Math.PI;
         
-        gsap.to(ball.rotation, { x: 0.05, y: 0, z: 0, duration: 1.5, ease: 'power3.out', overwrite: 'auto' });
+        gsap.to(ball.rotation, { x: 0.05, y: targetY, z: 0, duration: 1.5, ease: 'power3.out', overwrite: 'auto' });
       }
     }
   });
@@ -447,15 +462,16 @@ function onWindowResize() {
   const cardRequiredW = 1.4194 * aspect;
   const cardRequiredH = 1.4194;
   
-  // Scale the laptop so its screen perfectly contains the shrunk card
-  const scaleW = cardRequiredW / LAPTOP_CONFIG.screenWidth;
-  const scaleH = cardRequiredH / LAPTOP_CONFIG.screenHeight;
+  // Scale the model so its screen perfectly contains the shrunk card
+  const config = isMobile ? MOBILE_CONFIG : LAPTOP_CONFIG;
+  const scaleW = cardRequiredW / config.screenWidth;
+  const scaleH = cardRequiredH / config.screenHeight;
   const scale = Math.max(scaleW, scaleH);
   
   SECTIONS.frame.scale = scale;
   
-  // Shift the laptop down so the center of its screen aligns with the card (which is at Y=0)
-  SECTIONS.frame.y = -scale * LAPTOP_CONFIG.screenCenterY;
+  // Shift the model down so the center of its screen aligns with the card (which is at Y=0)
+  SECTIONS.frame.y = -scale * config.screenCenterY;
 
   ScrollTrigger.refresh();
 }
