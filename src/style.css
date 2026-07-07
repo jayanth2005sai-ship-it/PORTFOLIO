@@ -1364,7 +1364,7 @@ p {
   #hero-canvas { z-index: 15; }
   #hero-text { text-align: left; z-index: 20; pointer-events: none; margin: 0; }
   .hero-headline { align-items: flex-start; }
-  #sig-wrap { transform: scale(0.6); bottom: 1rem; right: 1rem; }
+  #sig-wrap { transform: scale(1.0); bottom: 1rem; right: 1rem; }
   #ph-badge { top: 4.5rem; left: 1.2rem; }
   .footer-bottom { flex-direction: column; gap: 1.5rem; }
   .ticker-wrap { width: 100%; }
@@ -1471,6 +1471,6 @@ p {
     font-size: 2.5rem;
   }
   #jayanth-sig {
-    width: 80vw;
+    width: 130vw;
   }
 }

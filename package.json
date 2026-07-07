@@ -4,15 +4,17 @@
  "private": true,
  "type": "module",
  "scripts": {
-   "dev": "vite --host --port 3000",
-   "build": "vite build",
-   "preview": "vite preview"
+  "dev": "vite --host --port 3000",
+  "build": "vite build",
+  "preview": "vite preview"
  },
  "dependencies": {
-   "three": "^0.176.0",
-   "gsap": "^3.12.5"
+  "gsap": "^3.12.5",
+  "three": "^0.176.0"
  },
  "devDependencies": {
-   "vite": "^6.0.0"
+  "@gltf-transform/core": "^4.4.1",
+  "@gltf-transform/extensions": "^4.4.1",
+  "vite": "^6.0.0"
  }
 }
