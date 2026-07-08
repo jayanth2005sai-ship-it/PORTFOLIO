@@ -26,6 +26,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -33,6 +34,8 @@ body {
   color: var(--ink);
   background-color: var(--cream);
   overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 a {
@@ -1368,6 +1371,12 @@ p {
   #ph-badge { top: 4.5rem; left: 1.2rem; }
   .footer-bottom { flex-direction: column; gap: 1.5rem; }
   .ticker-wrap { width: 100%; }
+  
+  /* Fix bottom space on mobile by resetting footer height and padding */
+  #site-footer {
+    min-height: auto;
+    padding: 6rem 1.5rem 2rem;
+  }
 }
 
 /* Global Click Spark Canvas */

@@ -35,19 +35,19 @@ const LAPTOP_CONFIG = {
 // TUNE THESE VALUES TO PERFECTLY MATCH YOUR MOBILE.GLB MODEL
 const MOBILE_CONFIG = {
   // The dimensions of the mobile screen in 3D units when scale is 1.
-  screenWidth: 1.05,
-  screenHeight: 2.25,
+  screenWidth: 2.1,
+  screenHeight: 4.5,
   // The vertical offset of the mobile screen center from the model's origin
   screenCenterY: 0.0 
 };
 
 const SECTIONS = {
-  hidden: { x: 0,   y: -1.5, z: 0,    scale: 0.1  },
-  frame:  { x: 0,   y: 0,    z: 0,    scale: 1.0  }, // Will be overwritten by onWindowResize
-  hero:   { x: 0.0, y: -0.45,z: 0,    scale: BALL_SCALE },
-  stats:  { x: 2.2, y: 0.0,  z: 0,    scale: BALL_SCALE },
-  how:    { x:-2.2, y: 0.0,  z: 0,    scale: BALL_SCALE },
-  footer: { x: 2.5, y: -1.3, z: -2.0, scale: FOOTER_SCALE },
+  hidden: { x: 0,   y: -1.5, z: 0,    scaleX: 0.1, scaleY: 0.1, scaleZ: 0.1 },
+  frame:  { x: 0,   y: 0,    z: 0,    scaleX: 1.0, scaleY: 1.0, scaleZ: 1.0 }, // Overwritten by resize
+  hero:   { x: 0.0, y: -0.45,z: 0,    scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
+  stats:  { x: 2.2, y: 0.0,  z: 0,    scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
+  how:    { x:-2.2, y: 0.0,  z: 0,    scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
+  footer: { x: 2.5, y: -1.3, z: -2.0, scaleX: FOOTER_SCALE, scaleY: FOOTER_SCALE, scaleZ: FOOTER_SCALE },
 };
 
 function init() {
@@ -106,7 +106,7 @@ function init() {
     const size = box.getSize(new THREE.Vector3());
     baseScale = 2.4 / Math.max(size.x, size.y, size.z);
     
-    ball.scale.setScalar(baseScale * SECTIONS.hidden.scale); 
+    ball.scale.set(baseScale * SECTIONS.hidden.scaleX, baseScale * SECTIONS.hidden.scaleY, baseScale * SECTIONS.hidden.scaleZ); 
     ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z); 
     if (isMobile) ball.rotation.y = Math.PI;
     
@@ -130,7 +130,7 @@ function init() {
     const material = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.8, metalness: 0 });
     ball = new THREE.Mesh(geometry, material);
     baseScale = 2.4;
-    ball.scale.setScalar(baseScale * SECTIONS.hidden.scale);
+    ball.scale.set(baseScale * SECTIONS.hidden.scaleX, baseScale * SECTIONS.hidden.scaleY, baseScale * SECTIONS.hidden.scaleZ);
     ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z);
     scene.add(ball);
     ballLoaded = true;
@@ -262,7 +262,11 @@ function setupGSAP() {
            ball.position.x = gsap.utils.interpolate(SECTIONS.hidden.x, SECTIONS.frame.x, p);
            ball.position.y = gsap.utils.interpolate(SECTIONS.hidden.y, SECTIONS.frame.y, p);
            ball.position.z = gsap.utils.interpolate(SECTIONS.hidden.z, SECTIONS.frame.z, p);
-           ball.scale.setScalar(baseScale * gsap.utils.interpolate(SECTIONS.hidden.scale, SECTIONS.frame.scale, p));
+           ball.scale.set(
+             baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleX, SECTIONS.frame.scaleX, p),
+             baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleY, SECTIONS.frame.scaleY, p),
+             baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleZ, SECTIONS.frame.scaleZ, p)
+           );
            
            const targetX = gsap.utils.interpolate(0.3, 0.05, p);
            gsap.to(ball.rotation, {
@@ -280,7 +284,7 @@ function setupGSAP() {
   
   heroCardTl.to('.hero-card', {
     scale: 0.45,
-    y: '-8.4vh',
+    y: '-8.4dvh',
     borderRadius: '100px',
     ease: 'none',
     duration: 0.8 // Finishes at 80% of the total pinned scroll
@@ -356,10 +360,12 @@ function setupScrollBall() {
     const x = gsap.utils.interpolate(sectionA.x, sectionB.x, progress);
     const y = gsap.utils.interpolate(sectionA.y, sectionB.y, gsap.parseEase('power2.inOut')(progress));
     const z = gsap.utils.interpolate(sectionA.z, sectionB.z, progress) + depthOffset(y);
-    const scale = gsap.utils.interpolate(sectionA.scale, sectionB.scale, progress);
+    const scaleX = gsap.utils.interpolate(sectionA.scaleX, sectionB.scaleX, progress);
+    const scaleY = gsap.utils.interpolate(sectionA.scaleY, sectionB.scaleY, progress);
+    const scaleZ = gsap.utils.interpolate(sectionA.scaleZ, sectionB.scaleZ, progress);
     
     ball.position.set(x, y, z);
-    ball.scale.setScalar(baseScale * scale);
+    ball.scale.set(baseScale * scaleX, baseScale * scaleY, baseScale * scaleZ);
   };
 
   const canvas = document.getElementById('hero-canvas');
@@ -435,8 +441,8 @@ function setupScrollBall() {
 
   // How to Footer
   const footerVelocityAnim = gsap.fromTo('.velocity-content',
-    { scale: 1, x: '0vw', y: '0vh' },
-    { scale: 0.4, x: '25vw', y: '25vh', ease: 'none' }
+    { scale: 1, x: '0vw', y: '0dvh' },
+    { scale: 0.4, x: '25vw', y: '25dvh', ease: 'none' }
   );
 
   ScrollTrigger.create({
@@ -466,12 +472,25 @@ function onWindowResize() {
   const config = isMobile ? MOBILE_CONFIG : LAPTOP_CONFIG;
   const scaleW = cardRequiredW / config.screenWidth;
   const scaleH = cardRequiredH / config.screenHeight;
-  const scale = Math.max(scaleW, scaleH);
   
-  SECTIONS.frame.scale = scale;
-  
-  // Shift the model down so the center of its screen aligns with the card (which is at Y=0)
-  SECTIONS.frame.y = -scale * config.screenCenterY;
+  if (isMobile) {
+    // Non-uniform scaling to perfectly match the card's edges on mobile, made slightly bigger for padding
+    const PADDING_FACTOR = 1.04;
+    // Add extra height to make the phone model taller (increased to 1.15 for more height)
+    const TALLER_FACTOR = 1.15; 
+    
+    SECTIONS.frame.scaleX = scaleW * PADDING_FACTOR;
+    SECTIONS.frame.scaleY = scaleH * PADDING_FACTOR * TALLER_FACTOR;
+    SECTIONS.frame.scaleZ = ((scaleW + scaleH) / 2) * PADDING_FACTOR;
+    SECTIONS.frame.y = -(scaleH * PADDING_FACTOR * TALLER_FACTOR) * config.screenCenterY;
+  } else {
+    // Uniform scaling for laptop
+    const scale = Math.max(scaleW, scaleH);
+    SECTIONS.frame.scaleX = scale;
+    SECTIONS.frame.scaleY = scale;
+    SECTIONS.frame.scaleZ = scale;
+    SECTIONS.frame.y = -scale * config.screenCenterY;
+  }
 
   ScrollTrigger.refresh();
 }
