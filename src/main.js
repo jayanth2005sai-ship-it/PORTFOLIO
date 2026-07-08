@@ -95,6 +95,7 @@ function init() {
   isMobile = window.innerWidth <= 768;
   const modelPath = isMobile ? '/models/mobile.glb' : '/models/laptop.glb';
 
+
   // Use a simple geometry as fallback if model isn't there, or just load nothing and wait for user
   loader.load(modelPath, (gltf) => {
     ball = gltf.scene;
@@ -474,15 +475,14 @@ function onWindowResize() {
   const scaleH = cardRequiredH / config.screenHeight;
   
   if (isMobile) {
-    // Non-uniform scaling to perfectly match the card's edges on mobile, made slightly bigger for padding
-    const PADDING_FACTOR = 1.04;
-    // Add extra height to make the phone model taller (increased to 1.15 for more height)
-    const TALLER_FACTOR = 1.15; 
+    // Non-uniform scaling to match the card's edges on mobile, with a small padding
+    const PADDING_FACTOR = 1.05; // Just a little more than the shrink card
+    const WIDER_FACTOR = 1.08; // Increase width specifically as requested
     
-    SECTIONS.frame.scaleX = scaleW * PADDING_FACTOR;
-    SECTIONS.frame.scaleY = scaleH * PADDING_FACTOR * TALLER_FACTOR;
+    SECTIONS.frame.scaleX = scaleW * PADDING_FACTOR * WIDER_FACTOR;
+    SECTIONS.frame.scaleY = scaleH * PADDING_FACTOR;
     SECTIONS.frame.scaleZ = ((scaleW + scaleH) / 2) * PADDING_FACTOR;
-    SECTIONS.frame.y = -(scaleH * PADDING_FACTOR * TALLER_FACTOR) * config.screenCenterY;
+    SECTIONS.frame.y = -(scaleH * PADDING_FACTOR) * config.screenCenterY;
   } else {
     // Uniform scaling for laptop
     const scale = Math.max(scaleW, scaleH);
