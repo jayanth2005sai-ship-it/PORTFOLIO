@@ -476,13 +476,35 @@ function onWindowResize() {
   
   if (isMobile) {
     // Non-uniform scaling to match the card's edges on mobile, with a small padding
-    const PADDING_FACTOR = 1.05; // Just a little more than the shrink card
-    const WIDER_FACTOR = 1.08; // Increase width specifically as requested
+    const PADDING_FACTOR = 1.3; // Increased significantly
+    const WIDER_FACTOR = 1.65; // Even wider as requested (aggressively wide)
+    const TALLER_FACTOR = 1.4; // Scale it taller
     
+    const baseScaleY = scaleH * PADDING_FACTOR;
     SECTIONS.frame.scaleX = scaleW * PADDING_FACTOR * WIDER_FACTOR;
-    SECTIONS.frame.scaleY = scaleH * PADDING_FACTOR;
+    SECTIONS.frame.scaleY = baseScaleY * TALLER_FACTOR;
     SECTIONS.frame.scaleZ = ((scaleW + scaleH) / 2) * PADDING_FACTOR;
-    SECTIONS.frame.y = -(scaleH * PADDING_FACTOR) * config.screenCenterY;
+    
+    // Default Y position
+    const oldY = -(baseScaleY * config.screenCenterY);
+    // Shift down
+    const shiftDown = (TALLER_FACTOR - 1) * 1.2; 
+    SECTIONS.frame.y = oldY - shiftDown;
+    
+    // Dynamically scale and position the hero center to prevent overlapping text
+    const heroCenter = document.querySelector('.hero-center');
+    if (heroCenter) {
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      const availH = vh - 320; // Text and stats take ~320px
+      const availW = vw - 40;
+      let newScale = Math.min(availH / 650, availW / 650, 0.65);
+      newScale = Math.max(newScale, 0.35);
+      const topPct = ((100 + (availH / 2)) / vh) * 100;
+      
+      heroCenter.style.transform = `translate(-50%, -50%) scale(${newScale})`;
+      heroCenter.style.top = `${topPct}%`;
+    }
   } else {
     // Uniform scaling for laptop
     const scale = Math.max(scaleW, scaleH);
@@ -490,6 +512,12 @@ function onWindowResize() {
     SECTIONS.frame.scaleY = scale;
     SECTIONS.frame.scaleZ = scale;
     SECTIONS.frame.y = -scale * config.screenCenterY;
+    
+    const heroCenter = document.querySelector('.hero-center');
+    if (heroCenter) {
+      heroCenter.style.transform = '';
+      heroCenter.style.top = '';
+    }
   }
 
   ScrollTrigger.refresh();
