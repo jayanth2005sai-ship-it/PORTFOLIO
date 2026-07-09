@@ -154,7 +154,7 @@ function setupInteractions(canvas) {
   const mouse = new THREE.Vector2();
 
   const onPointerDown = (e) => {
-    if (currentSection !== 'hero' || !canvas.classList.contains('drag-enabled')) return;
+    if (!canvas.classList.contains('drag-enabled')) return;
     
     const clientX = e.clientX ?? e.touches[0].clientX;
     const clientY = e.clientY ?? e.touches[0].clientY;
@@ -176,7 +176,7 @@ function setupInteractions(canvas) {
     const clientX = e.clientX ?? e.touches[0].clientX;
     const clientY = e.clientY ?? e.touches[0].clientY;
 
-    if (currentSection === 'hero' && canvas.classList.contains('drag-enabled')) {
+    if (canvas.classList.contains('drag-enabled')) {
       if (ball) {
         mouse.x = (clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(clientY / window.innerHeight) * 2 + 1;
@@ -249,6 +249,7 @@ function setupGSAP() {
       end: '+=150%',
       scrub: true,
       pin: true,
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
         if (self.progress > 0.01) {
           gsap.set('.sig-draw', { opacity: 1 });
@@ -285,7 +286,7 @@ function setupGSAP() {
   
   heroCardTl.to('.hero-card', {
     scale: 0.45,
-    y: '-8.4dvh',
+    y: () => '-8.4dvh',
     borderRadius: '100px',
     ease: 'none',
     duration: 0.8 // Finishes at 80% of the total pinned scroll
@@ -373,7 +374,7 @@ function setupScrollBall() {
   
   const toggleDrag = (section) => {
     currentSection = section;
-    if (section === 'hero') {
+    if (section !== 'new-hero') {
       canvas.classList.add('drag-enabled');
     } else {
       canvas.classList.remove('drag-enabled');
@@ -478,7 +479,7 @@ function onWindowResize() {
     // Non-uniform scaling to match the card's edges on mobile, with a small padding
     const PADDING_FACTOR = 1.3; // Increased significantly
     const WIDER_FACTOR = 1.65; // Even wider as requested (aggressively wide)
-    const TALLER_FACTOR = 1.4; // Scale it taller
+    const TALLER_FACTOR = 1.55; // Increased scale to make it even taller
     
     const baseScaleY = scaleH * PADDING_FACTOR;
     SECTIONS.frame.scaleX = scaleW * PADDING_FACTOR * WIDER_FACTOR;
@@ -487,8 +488,8 @@ function onWindowResize() {
     
     // Default Y position
     const oldY = -(baseScaleY * config.screenCenterY);
-    // Shift down
-    const shiftDown = (TALLER_FACTOR - 1) * 1.2; 
+    // Shift down (reduced multiplier to move it very slightly up)
+    const shiftDown = (TALLER_FACTOR - 1) * 0.95; 
     SECTIONS.frame.y = oldY - shiftDown;
     
     // Dynamically scale and position the hero center to prevent overlapping text
