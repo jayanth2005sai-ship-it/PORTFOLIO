@@ -836,6 +836,23 @@ const initCardSwap = () => {
   });
 };
 
+function initCircularText() {
+  const container = document.getElementById('circular-text-container');
+  if (!container) return;
+  const text = "FULL STACK DEVELOPER • UI/UX DESIGNER • ";
+  const letters = text.split('');
+  const radius = 300; 
+  
+  letters.forEach((letter, i) => {
+    const span = document.createElement('span');
+    span.innerText = letter;
+    const rotationDeg = (360 / letters.length) * i;
+    span.style.transform = `translate(-50%, -50%) rotateZ(${rotationDeg}deg) translateY(-${radius}px)`;
+    container.appendChild(span);
+  });
+}
+
 window.addEventListener('load', () => {
   initCardSwap();
+  initCircularText();
 });
