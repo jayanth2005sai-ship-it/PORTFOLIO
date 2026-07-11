@@ -194,6 +194,11 @@ function setupInteractions(canvas) {
 
     if (!isDragging) return;
     
+    // Prevent page scroll when interacting with the 3D model on mobile
+    if (isMobile && e.cancelable) {
+      e.preventDefault();
+    }
+    
     velocity.x = (clientY - previousMousePosition.y) * 0.006;
     velocity.y = (clientX - previousMousePosition.x) * 0.006;
     
@@ -212,8 +217,8 @@ function setupInteractions(canvas) {
   window.addEventListener('mousedown', onPointerDown);
   window.addEventListener('mousemove', onPointerMove);
   window.addEventListener('mouseup', onPointerUp);
-  window.addEventListener('touchstart', onPointerDown, { passive: true });
-  window.addEventListener('touchmove', onPointerMove, { passive: true });
+  window.addEventListener('touchstart', onPointerDown, { passive: false });
+  window.addEventListener('touchmove', onPointerMove, { passive: false });
   window.addEventListener('touchend', onPointerUp);
 }
 
@@ -506,6 +511,19 @@ function onWindowResize() {
       heroCenter.style.transform = `translate(-50%, -50%) scale(${newScale})`;
       heroCenter.style.top = `${topPct}%`;
     }
+    
+    // Decrease the size and bring down the mobile 3d model in the summary/hero page
+    const mobileModelScale = 0.65;
+    SECTIONS.hero.scaleX = mobileModelScale;
+    SECTIONS.hero.scaleY = mobileModelScale;
+    SECTIONS.hero.scaleZ = mobileModelScale;
+    SECTIONS.hero.y = -1.8; // Bring down under EXPERIENCES
+    SECTIONS.stats.scaleX = mobileModelScale;
+    SECTIONS.stats.scaleY = mobileModelScale;
+    SECTIONS.stats.scaleZ = mobileModelScale;
+    SECTIONS.how.scaleX = mobileModelScale;
+    SECTIONS.how.scaleY = mobileModelScale;
+    SECTIONS.how.scaleZ = mobileModelScale;
   } else {
     // Uniform scaling for laptop
     const scale = Math.max(scaleW, scaleH);
@@ -519,6 +537,18 @@ function onWindowResize() {
       heroCenter.style.transform = '';
       heroCenter.style.top = '';
     }
+
+    // Keep the original scale and position for the laptop model
+    SECTIONS.hero.scaleX = BALL_SCALE;
+    SECTIONS.hero.scaleY = BALL_SCALE;
+    SECTIONS.hero.scaleZ = BALL_SCALE;
+    SECTIONS.hero.y = -0.45; // Default desktop position
+    SECTIONS.stats.scaleX = BALL_SCALE;
+    SECTIONS.stats.scaleY = BALL_SCALE;
+    SECTIONS.stats.scaleZ = BALL_SCALE;
+    SECTIONS.how.scaleX = BALL_SCALE;
+    SECTIONS.how.scaleY = BALL_SCALE;
+    SECTIONS.how.scaleZ = BALL_SCALE;
   }
 
   ScrollTrigger.refresh();

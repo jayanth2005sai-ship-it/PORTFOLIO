@@ -1365,7 +1365,13 @@ p {
   #hero-section { justify-content: flex-start; align-items: flex-start; padding: 5.5rem 1.4rem 2rem; }
   .hl-line { font-size: clamp(3.8rem, 17vw, 5.5rem); }
   #hero-canvas { z-index: 15; }
-  #hero-text { text-align: left; z-index: 20; pointer-events: none; margin: 0; }
+  #hero-text { text-align: left; z-index: 20; pointer-events: none; margin: 0; width: 100%; }
+  .pricing-strip {
+    position: absolute;
+    top: calc(100vh - 12rem);
+    right: 0;
+    pointer-events: auto;
+  }
   .hero-headline { align-items: flex-start; }
   #sig-wrap { transform: scale(1.0); bottom: 1rem; right: 1rem; }
   #ph-badge { top: 4.5rem; left: 1.2rem; }
