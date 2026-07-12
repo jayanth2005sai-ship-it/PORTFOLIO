@@ -517,7 +517,7 @@ function onWindowResize() {
     SECTIONS.hero.scaleX = mobileModelScale;
     SECTIONS.hero.scaleY = mobileModelScale;
     SECTIONS.hero.scaleZ = mobileModelScale;
-    SECTIONS.hero.y = -1.8; // Bring down under EXPERIENCES
+    SECTIONS.hero.y = -1.15; // Center vertically in the space under EXPERIENCES
     SECTIONS.stats.scaleX = mobileModelScale;
     SECTIONS.stats.scaleY = mobileModelScale;
     SECTIONS.stats.scaleZ = mobileModelScale;
