@@ -1470,7 +1470,7 @@ p {
   .hero-bottom-left {
     left: 50%;
     transform: translateX(-50%);
-    bottom: 11rem;
+    bottom: 9.5rem;
     text-align: center;
     width: 100%;
   }
@@ -1484,12 +1484,12 @@ p {
     justify-content: center;
   }
   .greeting {
-    font-size: clamp(0.7rem, 3vw, 1rem);
+    font-size: clamp(0.85rem, 3.5vw, 1.15rem);
     letter-spacing: 3px;
     margin-bottom: 0.5rem;
   }
   .main-title {
-    font-size: clamp(2rem, 9vw, 4rem);
+    font-size: clamp(2.4rem, 10vw, 4.2rem);
   }
   .stats-box {
     padding: 1rem 1.25rem;
@@ -1535,7 +1535,7 @@ p {
   top: 50%;
   left: 50%;
   text-align: center;
-  font-family: var(--font-display);
+  font-family: 'Arial Black', Arial, sans-serif;
   font-size: 2.2rem;
   letter-spacing: 4px;
   font-weight: 700;
