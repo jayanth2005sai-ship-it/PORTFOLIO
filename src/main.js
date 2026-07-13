@@ -449,7 +449,12 @@ function setupScrollBall() {
   // How to Footer
   const footerVelocityAnim = gsap.fromTo('.velocity-content',
     { scale: 1, x: '0vw', y: '0dvh' },
-    { scale: 0.4, x: '25vw', y: '25dvh', ease: 'none' }
+    { 
+      scale: () => window.innerWidth <= 768 ? 1 : 0.4, 
+      x: () => window.innerWidth <= 768 ? '0vw' : '25vw', 
+      y: () => window.innerWidth <= 768 ? '0dvh' : '25dvh', 
+      ease: 'none' 
+    }
   );
 
   ScrollTrigger.create({
@@ -458,6 +463,7 @@ function setupScrollBall() {
     end: 'top top',
     scrub: 2,
     animation: footerVelocityAnim,
+    invalidateOnRefresh: true,
     onUpdate: (self) => updateBallPosition(self.progress, SECTIONS.how, SECTIONS.footer),
     onEnter: () => toggleDrag('footer'),
     onLeaveBack: () => toggleDrag('how')
@@ -524,6 +530,12 @@ function onWindowResize() {
     SECTIONS.how.scaleX = mobileModelScale;
     SECTIONS.how.scaleY = mobileModelScale;
     SECTIONS.how.scaleZ = mobileModelScale;
+    SECTIONS.footer.scaleX = mobileModelScale;
+    SECTIONS.footer.scaleY = mobileModelScale;
+    SECTIONS.footer.scaleZ = mobileModelScale;
+    SECTIONS.footer.x = 0;
+    SECTIONS.footer.y = 0;
+    SECTIONS.footer.z = 0;
   } else {
     // Uniform scaling for laptop
     const scale = Math.max(scaleW, scaleH);
@@ -549,6 +561,12 @@ function onWindowResize() {
     SECTIONS.how.scaleX = BALL_SCALE;
     SECTIONS.how.scaleY = BALL_SCALE;
     SECTIONS.how.scaleZ = BALL_SCALE;
+    SECTIONS.footer.scaleX = FOOTER_SCALE;
+    SECTIONS.footer.scaleY = FOOTER_SCALE;
+    SECTIONS.footer.scaleZ = FOOTER_SCALE;
+    SECTIONS.footer.x = 2.5;
+    SECTIONS.footer.y = -1.3;
+    SECTIONS.footer.z = -2.0;
   }
 
   ScrollTrigger.refresh();

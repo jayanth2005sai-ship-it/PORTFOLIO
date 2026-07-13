@@ -1375,13 +1375,30 @@ p {
   .hero-headline { align-items: flex-start; }
   #sig-wrap { transform: scale(1.0); bottom: 1rem; right: 1rem; }
   #ph-badge { top: 4.5rem; left: 1.2rem; }
-  .footer-bottom { flex-direction: column; gap: 1.5rem; }
+  
   .ticker-wrap { width: 100%; }
   
-  /* Fix bottom space on mobile by resetting footer height and padding */
+  /* Footer Mobile Alignment */
   #site-footer {
     min-height: auto;
-    padding: 6rem 1.5rem 2rem;
+    padding: 100vh 1.5rem 2rem; /* Push content below the 3D model */
+  }
+  .footer-brand {
+    align-items: center;
+    text-align: center;
+  }
+  .social-pills {
+    justify-content: center;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .footer-legal {
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
   }
 }
 
@@ -1398,11 +1415,13 @@ p {
 }
 
 .card-swap-container {
-  position: relative;
-  margin-top: 8rem;
-  margin-left: auto;
-  perspective: 900px;
-  overflow: visible;
+  position: absolute;
+  right: -12vw;
+  bottom: -15vh;
+  width: 800px;
+  height: 600px;
+  perspective: 1200px;
+  z-index: 0;
 }
 
 .card {
@@ -1423,13 +1442,13 @@ p {
 
 @media (max-width: 768px) {
   .card-swap-container {
-    transform: scale(0.75) translate(25%, 25%);
+    transform: scale(0.75) translate(40%, 25%);
   }
 }
 
 @media (max-width: 480px) {
   .card-swap-container {
-    transform: scale(0.55) translate(25%, 25%);
+    transform: scale(0.55) translate(50%, 25%);
   }
 }
 
