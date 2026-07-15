@@ -468,6 +468,25 @@ function setupScrollBall() {
     onEnter: () => toggleDrag('footer'),
     onLeaveBack: () => toggleDrag('how')
   });
+
+  // Mobile Footer Content Scroll (Push up the fixed elements)
+  ScrollTrigger.create({
+    trigger: '#site-footer',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: true,
+    animation: gsap.to(['.velocity-container', '.canvas-track'], {
+      y: () => {
+        if (window.innerWidth <= 768) {
+          const footer = document.getElementById('site-footer');
+          return -(footer.offsetHeight - window.innerHeight);
+        }
+        return 0;
+      },
+      ease: 'none'
+    }),
+    invalidateOnRefresh: true
+  });
 }
 
 function onWindowResize() {
@@ -534,7 +553,7 @@ function onWindowResize() {
     SECTIONS.footer.scaleY = mobileModelScale;
     SECTIONS.footer.scaleZ = mobileModelScale;
     SECTIONS.footer.x = 0;
-    SECTIONS.footer.y = 0;
+    SECTIONS.footer.y = -1.0;
     SECTIONS.footer.z = 0;
   } else {
     // Uniform scaling for laptop

@@ -1382,6 +1382,7 @@ p {
   #site-footer {
     min-height: auto;
     padding: 100vh 1.5rem 2rem; /* Push content below the 3D model */
+    background: linear-gradient(to bottom, transparent 100vh, var(--ink) 100vh);
   }
   .footer-brand {
     align-items: center;
