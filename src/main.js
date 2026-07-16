@@ -22,8 +22,8 @@ let currentSection = 'new-hero';
 let baseScale = 1;
 let ballLoaded = false;
 
-const BALL_SCALE = 0.97;
-const FOOTER_SCALE = 0.5;
+const BALL_SCALE = 0.85;
+const FOOTER_SCALE = 0.4;
 const LAPTOP_CONFIG = {
   // The dimensions of the laptop screen in 3D units when scale is 1.
   screenWidth: 2.15,
@@ -556,12 +556,18 @@ function onWindowResize() {
     SECTIONS.footer.y = -1.0;
     SECTIONS.footer.z = 0;
   } else {
-    // Uniform scaling for laptop
-    const scale = Math.max(scaleW, scaleH);
-    SECTIONS.frame.scaleX = scale;
-    SECTIONS.frame.scaleY = scale;
-    SECTIONS.frame.scaleZ = scale;
-    SECTIONS.frame.y = -scale * config.screenCenterY;
+    // Non-uniform scaling for laptop to perfectly match the shrink card
+    // Decrease the width slightly to shrink the left side
+    const widthReduction = 0.06;
+    SECTIONS.frame.scaleX = scaleW - widthReduction;
+    SECTIONS.frame.scaleY = scaleH;
+    SECTIONS.frame.scaleZ = (scaleW + scaleH) / 2; // Keep Z roughly proportional
+    
+    // The hero card is offset by -8.4dvh (moves UP in DOM, so +y in 3D)
+    // 8.4vh of 3.154 3D units = 0.2649
+    SECTIONS.frame.y = -scaleH * config.screenCenterY + (3.154 * 0.084) - 0.2; // Shift down slightly
+    // Shift right by half the width reduction to keep the right edge in place
+    SECTIONS.frame.x = 0.45 + (widthReduction / 2);
     
     const heroCenter = document.querySelector('.hero-center');
     if (heroCenter) {
