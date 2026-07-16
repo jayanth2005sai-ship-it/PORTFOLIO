@@ -1362,6 +1362,7 @@ p {
 }
 
 @media (max-width: 600px) {
+  html, body { background-color: var(--ink); }
   #hero-section { justify-content: flex-start; align-items: flex-start; padding: 5.5rem 1.4rem 2rem; }
   .hl-line { font-size: clamp(3.8rem, 17vw, 5.5rem); }
   #hero-canvas { z-index: 15; }
@@ -1555,7 +1556,7 @@ p {
   top: 50%;
   left: 50%;
   text-align: center;
-  font-family: 'Arial Black', Arial, sans-serif;
+  font-family: 'Figtree', sans-serif;
   font-size: 2.2rem;
   letter-spacing: 4px;
   font-weight: 700;
