@@ -13,10 +13,10 @@ let isDragging = false;
 let previousMousePosition = { x: 0, y: 0 };
 let velocity = { x: 0, y: 0 };
 const DAMPING = 0.94;
-const BASE_SPEED = 0.003;
+const BASE_SPEED = 0.001;
 let autoVel = {
-  x: (Math.random() - 0.5) * 0.003,
-  y: BASE_SPEED + Math.random() * 0.002,
+  x: (Math.random() - 0.5) * 0.001,
+  y: BASE_SPEED + Math.random() * 0.001,
 };
 let currentSection = 'new-hero';
 let baseScale = 1;
@@ -649,8 +649,8 @@ function animate(time) {
       // If momentum is dead, apply auto velocity based on last direction
       if (Math.abs(velocity.x) < 0.0005 && Math.abs(velocity.y) < 0.0005) {
         if (Math.abs(velocity.x) > 0 || Math.abs(velocity.y) > 0) {
-          autoVel.x = (velocity.x > 0 ? 1 : -1) * (Math.abs(velocity.x) + 0.001);
-          autoVel.y = (velocity.y > 0 ? 1 : -1) * (Math.abs(velocity.y) + 0.001);
+          autoVel.x = (velocity.x > 0 ? 1 : -1) * (Math.abs(velocity.x) + 0.0005);
+          autoVel.y = (velocity.y > 0 ? 1 : -1) * (Math.abs(velocity.y) + 0.0005);
           
           // Cap speeds
           autoVel.x = Math.max(Math.min(autoVel.x, 0.01), -0.01);
@@ -958,3 +958,13 @@ window.addEventListener('load', () => {
   initCardSwap();
   initCircularText();
 });
+
+// Close event card on mobile when scrolling
+window.addEventListener('scroll', () => {
+  if (window.innerWidth <= 900) {
+    const eventCard = document.getElementById('event-card');
+    if (eventCard && eventCard.classList.contains('show-mobile')) {
+      eventCard.classList.remove('show-mobile');
+    }
+  }
+}, { passive: true });
