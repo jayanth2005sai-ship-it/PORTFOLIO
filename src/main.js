@@ -968,3 +968,149 @@ window.addEventListener('scroll', () => {
     }
   }
 }, { passive: true });
+
+// Flowing Mobile Menu Logic
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('flowing-mobile-menu');
+  const closeMenuBtn = document.getElementById('close-mobile-menu');
+  const menuBackdrop = document.getElementById('mobile-menu-backdrop');
+  
+  if (mobileBtn && mobileMenu) {
+    const closeMenu = () => {
+      mobileMenu.classList.remove('active');
+      if (menuBackdrop) menuBackdrop.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    mobileBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      mobileMenu.classList.add('active');
+      if (menuBackdrop) menuBackdrop.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+    
+    closeMenuBtn?.addEventListener('click', closeMenu);
+    menuBackdrop?.addEventListener('click', closeMenu);
+  }
+
+  const items = document.querySelectorAll('.menu__item');
+  const speed = 15;
+  const animationDefaults = { duration: 0.6, ease: 'expo.out' };
+  
+  const distMetric = (x, y, x2, y2) => {
+    const xDiff = x - x2;
+    const yDiff = y - y2;
+    return xDiff * xDiff + yDiff * yDiff;
+  };
+  
+  const findClosestEdge = (mouseX, mouseY, width, height) => {
+    const topEdgeDist = distMetric(mouseX, mouseY, width / 2, 0);
+    const bottomEdgeDist = distMetric(mouseX, mouseY, width / 2, height);
+    return topEdgeDist < bottomEdgeDist ? 'top' : 'bottom';
+  };
+
+  items.forEach(item => {
+    const text = item.getAttribute('data-text');
+    const image = item.getAttribute('data-image');
+    const link = item.getAttribute('data-link');
+    
+    item.innerHTML = `
+      <a class="menu__item-link" href="${link}">${text}</a>
+      <div class="marquee">
+        <div class="marquee__inner-wrap">
+          <div class="marquee__inner" aria-hidden="true"></div>
+        </div>
+      </div>
+    `;
+    
+    const marqueeInner = item.querySelector('.marquee__inner');
+    const marquee = item.querySelector('.marquee');
+    
+    const updateRepetitions = () => {
+      if (!marqueeInner) return;
+      marqueeInner.innerHTML = `
+        <div class="marquee__part">
+          <span>${text}</span>
+          <div class="marquee__img" style="background-image: url(${image})"></div>
+        </div>
+      `;
+      const part = marqueeInner.querySelector('.marquee__part');
+      if (!part) return;
+      
+      const partWidth = part.offsetWidth;
+      if (partWidth === 0) return;
+      
+      const needed = Math.ceil(window.innerWidth / partWidth) + 2;
+      const reps = Math.max(4, needed);
+      
+      let html = '';
+      for (let i = 0; i < reps; i++) {
+        html += `
+          <div class="marquee__part">
+            <span>${text}</span>
+            <div class="marquee__img" style="background-image: url(${image})"></div>
+          </div>
+        `;
+      }
+      marqueeInner.innerHTML = html;
+      
+      gsap.killTweensOf(marqueeInner);
+      gsap.to(marqueeInner, {
+        x: -partWidth,
+        duration: speed,
+        ease: 'none',
+        repeat: -1
+      });
+    };
+
+    setTimeout(updateRepetitions, 100);
+    window.addEventListener('resize', updateRepetitions);
+
+    const handleEnter = (e) => {
+      const rect = item.getBoundingClientRect();
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      const edge = findClosestEdge(x, y, rect.width, rect.height);
+
+      item.classList.add('active-hover');
+      gsap.timeline({ defaults: animationDefaults })
+        .set(marquee, { y: edge === 'top' ? '-101%' : '101%' }, 0)
+        .set(marqueeInner, { y: edge === 'top' ? '101%' : '-101%' }, 0)
+        .to([marquee, marqueeInner], { y: '0%' }, 0);
+    };
+
+    const handleLeave = (e) => {
+      const rect = item.getBoundingClientRect();
+      const clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX) || 0;
+      const clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY) || 0;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      const edge = findClosestEdge(x, y, rect.width, rect.height);
+
+      item.classList.remove('active-hover');
+      gsap.timeline({ defaults: animationDefaults })
+        .to(marquee, { y: edge === 'top' ? '-101%' : '101%' }, 0)
+        .to(marqueeInner, { y: edge === 'top' ? '101%' : '-101%' }, 0);
+    };
+
+    item.addEventListener('mouseenter', handleEnter);
+    item.addEventListener('mouseleave', handleLeave);
+    
+    item.addEventListener('touchstart', handleEnter, { passive: true });
+    item.addEventListener('touchend', (e) => {
+      setTimeout(() => handleLeave(e), 200);
+    });
+
+    const linkEl = item.querySelector('.menu__item-link');
+    if (linkEl) {
+      linkEl.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        if (menuBackdrop) menuBackdrop.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+});
