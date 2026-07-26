@@ -124,6 +124,7 @@ function init() {
     });
     scene.add(ball);
     ballLoaded = true;
+    ScrollTrigger.refresh();
   }, undefined, (error) => {
     console.warn("User needs to provide laptop.glb. Proceeding with dummy cube for now.");
     // Fallback if no glb is present just so it doesn't break
@@ -135,6 +136,7 @@ function init() {
     ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z);
     scene.add(ball);
     ballLoaded = true;
+    ScrollTrigger.refresh();
   });
 
   setupInteractions(canvas);
@@ -145,6 +147,11 @@ function init() {
   onWindowResize();
 
   window.addEventListener('resize', onWindowResize);
+
+  // Reveal body after GSAP has initialized to prevent FOUC
+  requestAnimationFrame(() => {
+    document.body.classList.add('ready');
+  });
 }
 
 
