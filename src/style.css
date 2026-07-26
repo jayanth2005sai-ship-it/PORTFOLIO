@@ -673,6 +673,24 @@ p {
   background-position: center;
 }
 
+.photo-overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 0.85;
+  mix-blend-mode: overlay;
+  z-index: 5;
+  pointer-events: none;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
 .ec-photo::after {
   content: '';
   position: absolute;
@@ -891,6 +909,10 @@ p {
   font-size: 1.5rem;
   opacity: 0.6;
   margin-bottom: 2rem;
+}
+
+.mobile-actions-wrapper {
+  display: none;
 }
 
 .pricing-strip {
@@ -2227,6 +2249,15 @@ p {
 }
 
 @media (max-width: 900px) {
+  .mobile-actions-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 1rem;
+    z-index: 100;
+  }
+
   .mobile-profile-pill {
     display: flex;
   }
