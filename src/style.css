@@ -914,10 +914,16 @@ p {
 .mobile-actions-wrapper {
   display: flex;
   gap: 12px;
-  position: absolute;
-  bottom: 5rem;
-  right: 4rem;
-  z-index: 50;
+}
+
+@media (min-width: 901px) {
+  .mobile-actions-wrapper {
+    position: absolute;
+    bottom: -1.8rem;
+    right: 3rem;
+    z-index: 50;
+    margin-top: 0;
+  }
 }
 
 .pricing-strip {
@@ -2259,9 +2265,6 @@ p {
     align-items: center;
     gap: 12px;
     justify-content: center;
-    position: relative;
-    top: auto;
-    right: auto;
     margin-top: 1rem;
     z-index: 100;
   }
