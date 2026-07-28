@@ -811,8 +811,8 @@ const initCardSwap = () => {
   const projectData = [
     {
       eyebrow: "FEATURED WORK",
-      title: "NEXT-GEN<br>DATA PLATFORM",
-      desc: "A high-performance analytics engine processing millions of events in real-time. Built with a modern stack for lightning-fast data visualizations and deep insights."
+      title: "NestOS<br>INTELLIGENT HOME OS",
+      desc: "A self-hosted SaaS application providing an intelligent home OS experience. Built to run locally and equipped with AI capabilities via the Gemini API."
     },
     {
       eyebrow: "INFRASTRUCTURE",
