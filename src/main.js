@@ -1121,3 +1121,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// --- Lanyard Interactivity Logic ---
+const initLanyard = () => {
+  const lanyardCard = document.getElementById('lanyard-card');
+  const lanyardWrapper = document.querySelector('.lanyard-wrapper');
+  const flipper = document.getElementById('lanyard-flipper');
+  const glare = document.getElementById('badge-glare');
+  if (!lanyardCard || !lanyardWrapper || !flipper) return;
+
+  let isFlipped = false;
+
+  // Click to flip
+  lanyardCard.addEventListener('click', () => {
+    isFlipped = !isFlipped;
+    if (isFlipped) {
+      flipper.classList.add('is-flipped');
+    } else {
+      flipper.classList.remove('is-flipped');
+    }
+  });
+
+  const handleMouseMove = (e) => {
+    const rect = lanyardWrapper.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    // Springy elastic movement
+    gsap.to(lanyardCard, {
+      rotateY: (x / rect.width) * 45,
+      rotateX: -(y / rect.height) * 45,
+      duration: 0.8,
+      ease: 'elastic.out(1, 0.75)',
+      transformPerspective: 1200
+    });
+
+    // Move glare
+    if (glare) {
+      gsap.to(glare, {
+        x: (x / rect.width) * 100 + '%',
+        y: (y / rect.height) * 100 + '%',
+        duration: 0.5,
+        ease: 'power2.out'
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    // Heavy spring settle
+    gsap.to(lanyardCard, {
+      rotateY: 0,
+      rotateX: 0,
+      duration: 2.5,
+      ease: 'elastic.out(1, 0.2)'
+    });
+    
+    // Reset glare
+    if (glare) {
+      gsap.to(glare, {
+        x: '0%',
+        y: '0%',
+        duration: 1.2,
+        ease: 'power2.out'
+      });
+    }
+  };
+
+  lanyardWrapper.addEventListener('mousemove', handleMouseMove);
+  lanyardWrapper.addEventListener('mouseleave', handleMouseLeave);
+};
+
+// Initialize after DOM loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLanyard);
+} else {
+  initLanyard();
+}
