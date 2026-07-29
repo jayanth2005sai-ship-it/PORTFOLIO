@@ -815,14 +815,14 @@ const initCardSwap = () => {
       desc: "A self-hosted SaaS application providing an intelligent home OS experience. Built to run locally and equipped with AI capabilities via the Gemini API."
     },
     {
-      eyebrow: "INFRASTRUCTURE",
-      title: "GLOBAL<br>CLOUD NETWORK",
-      desc: "Distributed server architecture ensuring 99.99% uptime. Scalable containerized microservices ready to handle traffic spikes globally."
+      eyebrow: "DATA ANALYSIS PROJECT",
+      title: "Identifying Shopping Trends<br>using Data Analysis",
+      desc: "A comprehensive data analysis project to uncover and visualize shopping patterns and consumer trends.<br><br><a href='https://github.com/jayanth2005sai-ship-it/Identifying-Shopping-Trends-using-Data-Analysis-/tree/main' target='_blank' style='color: var(--neon-green); text-decoration: underline; font-weight: bold;'>View on GitHub ↗</a>"
     },
     {
-      eyebrow: "DATA INSIGHTS",
-      title: "PREDICTIVE<br>ANALYTICS",
-      desc: "Advanced machine learning models turning raw data into actionable intelligence. Custom dashboards tailored for executive decision-making."
+      eyebrow: "CLUB PLATFORM",
+      title: "IGNITE",
+      desc: "The Intelligent Group for Nurturing Innovation in Technology and Engineering platform.<br><br><a href='https://github.com/jayanth2005sai-ship-it/IGNITE' target='_blank' style='color: var(--neon-green); text-decoration: underline; font-weight: bold;'>View on GitHub ↗</a>"
     },
     {
       eyebrow: "USER EXPERIENCE",

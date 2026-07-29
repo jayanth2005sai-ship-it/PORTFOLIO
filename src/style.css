@@ -2986,3 +2986,31 @@ p {
   transform: scaleY(2);
 }
 
+/* --- Gmail Expand Button --- */
+.gmail-short, .gmail-full {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+  vertical-align: middle;
+}
+
+.gmail-short {
+  max-width: 50px;
+  opacity: 1;
+}
+
+.gmail-full {
+  max-width: 0;
+  opacity: 0;
+}
+
+.gmail-pill:hover .gmail-short {
+  max-width: 0;
+  opacity: 0;
+}
+
+.gmail-pill:hover .gmail-full {
+  max-width: 250px;
+  opacity: 1;
+}
