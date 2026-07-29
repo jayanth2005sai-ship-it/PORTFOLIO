@@ -2789,9 +2789,12 @@ p {
 }
 
 .badge-name {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
   color: #fff;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .badge-status {
@@ -2826,16 +2829,18 @@ p {
 }
 
 .data-label {
-  font-size: 0.7rem;
-  color: #666;
+  font-size: 0.75rem;
+  color: #888;
   font-family: monospace;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .data-value {
-  font-size: 1rem;
-  color: #ddd;
-  font-weight: 500;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .footer-bottom-new {
@@ -2867,6 +2872,18 @@ p {
   .new-footer-layout {
     flex-direction: column;
     gap: 5rem;
+    align-items: center;
+  }
+  .footer-left {
+    align-items: center;
+    text-align: center;
+  }
+  .footer-brand-new {
+    align-items: center;
+  }
+  .social-pills-new {
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .lanyard-wrapper {
     width: 300px;
@@ -2974,8 +2991,12 @@ p {
 .access-pass-text {
   font-family: var(--font-display);
   font-size: 2.2rem;
-  letter-spacing: 2px;
+  font-weight: 800;
+  letter-spacing: 3px;
   color: #fff;
+  text-align: center;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .barcode {
@@ -3014,3 +3035,18 @@ p {
   max-width: 250px;
   opacity: 1;
 }
+
+/* --- Tech Pills --- */
+.tech-pill {
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: default;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.tech-pill:hover {
+  background: var(--neon-green);
+  color: var(--ink);
+}
+
