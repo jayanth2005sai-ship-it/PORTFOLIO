@@ -812,17 +812,20 @@ const initCardSwap = () => {
     {
       eyebrow: "FEATURED WORK",
       title: "NestOS<br>INTELLIGENT HOME OS",
-      desc: "A self-hosted SaaS application providing an intelligent home OS experience. Built to run locally and equipped with AI capabilities via the Gemini API."
+      desc: "A self-hosted SaaS application providing an intelligent home OS experience. Built to run locally and equipped with AI capabilities via the Gemini API.",
+      github: "https://github.com/jayanth2005sai-ship-it/NestOS"
     },
     {
       eyebrow: "DATA ANALYSIS PROJECT",
       title: "Identifying Shopping Trends<br>using Data Analysis",
-      desc: "A comprehensive data analysis project to uncover and visualize shopping patterns and consumer trends.<br><br><a href='https://github.com/jayanth2005sai-ship-it/Identifying-Shopping-Trends-using-Data-Analysis-/tree/main' target='_blank' style='color: var(--neon-green); text-decoration: underline; font-weight: bold;'>View on GitHub ↗</a>"
+      desc: "A comprehensive data analysis project to uncover and visualize shopping patterns and consumer trends.",
+      github: "https://github.com/jayanth2005sai-ship-it/Identifying-Shopping-Trends-using-Data-Analysis-/tree/main"
     },
     {
       eyebrow: "CLUB PLATFORM",
       title: "IGNITE",
-      desc: "The Intelligent Group for Nurturing Innovation in Technology and Engineering platform.<br><br><a href='https://github.com/jayanth2005sai-ship-it/IGNITE' target='_blank' style='color: var(--neon-green); text-decoration: underline; font-weight: bold;'>View on GitHub ↗</a>"
+      desc: "The Intelligent Group for Nurturing Innovation in Technology and Engineering platform.",
+      github: "https://github.com/jayanth2005sai-ship-it/IGNITE"
     },
     {
       eyebrow: "USER EXPERIENCE",
@@ -834,7 +837,7 @@ const initCardSwap = () => {
   const updateText = (newFront) => {
     const data = projectData[newFront % projectData.length];
     
-    gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p'], {
+    gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p', '#project-github-btn'], {
       opacity: 0,
       y: -10,
       duration: 0.3,
@@ -843,12 +846,21 @@ const initCardSwap = () => {
         const eyebrowEl = document.querySelector('.how-content .eyebrow');
         const h2El = document.querySelector('.how-content h2');
         const pEl = document.querySelector('.how-content p');
+        const btnEl = document.getElementById('project-github-btn');
         
         if (eyebrowEl) eyebrowEl.innerHTML = data.eyebrow;
         if (h2El) h2El.innerHTML = data.title;
         if (pEl) pEl.innerHTML = data.desc;
+        if (btnEl) {
+          if (data.github) {
+            btnEl.href = data.github;
+            btnEl.style.display = 'flex';
+          } else {
+            btnEl.style.display = 'none';
+          }
+        }
         
-        gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p'], {
+        gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p', '#project-github-btn'], {
           opacity: 1,
           y: 0,
           duration: 0.3,
