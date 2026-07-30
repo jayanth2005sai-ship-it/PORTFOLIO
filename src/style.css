@@ -1488,10 +1488,16 @@ p {
     transform: translateY(-5px);
   }
 
-  #stats-section,
-  #how-section {
+  #stats-section {
     flex-direction: column;
     padding: 6rem 1.5rem;
+    text-align: center;
+    gap: 3rem;
+  }
+
+  #how-section {
+    flex-direction: column;
+    padding: 6rem 1.5rem 45rem 1.5rem;
     text-align: center;
     gap: 3rem;
   }
@@ -1515,6 +1521,11 @@ p {
 
   .step-arrow {
     transform: rotate(90deg);
+  }
+
+  #site-footer {
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .footer-top {
@@ -2048,7 +2059,7 @@ p {
   width: 800px;
   height: 600px;
   perspective: 1200px;
-  z-index: 0;
+  z-index: 10;
 }
 
 .card {
@@ -2069,13 +2080,13 @@ p {
 
 @media (max-width: 768px) {
   .card-swap-container {
-    transform: scale(0.75) translate(40%, 25%);
+    transform: scale(0.75) translate(40%, 80%);
   }
 }
 
 @media (max-width: 480px) {
   .card-swap-container {
-    transform: scale(0.55) translate(50%, 25%);
+    transform: scale(0.55) translate(50%, 80%);
   }
 }
 
