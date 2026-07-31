@@ -1131,8 +1131,8 @@ p {
   background: var(--cream-mid);
   gap: 6rem;
   position: relative;
-  z-index: 10;
-  overflow: visible;
+  z-index: 1;
+  overflow: hidden;
 }
 
 .bg-text-how {
@@ -1269,7 +1269,6 @@ p {
   background: transparent;
   color: rgba(255, 255, 255, 0.75);
   padding: 10rem 4rem 1rem;
-  margin-top: 20rem;
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -1633,6 +1632,7 @@ p {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   cursor: pointer;
 }
 
@@ -1667,7 +1667,6 @@ p {
   background: transparent;
   color: rgba(255, 255, 255, 0.75);
   padding: 10rem 4rem 1rem;
-  margin-top: 20rem;
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -1900,6 +1899,10 @@ p {
     text-align: center;
     gap: 3rem;
     min-height: 100vh;
+  }
+
+  #how-section {
+    overflow: visible;
   }
 
   .stats-left,
