@@ -459,7 +459,7 @@ function setupScrollBall() {
     { 
       scale: () => window.innerWidth <= 768 ? 1 : 0.4, 
       x: () => window.innerWidth <= 768 ? '0vw' : '25vw', 
-      y: () => window.innerWidth <= 768 ? '0dvh' : '25dvh', 
+      y: () => window.innerWidth <= 768 ? '15dvh' : '25dvh', 
       ease: 'none' 
     }
   );
@@ -560,7 +560,7 @@ function onWindowResize() {
     SECTIONS.footer.scaleY = mobileModelScale;
     SECTIONS.footer.scaleZ = mobileModelScale;
     SECTIONS.footer.x = 0;
-    SECTIONS.footer.y = -1.0;
+    SECTIONS.footer.y = -1.3;
     SECTIONS.footer.z = 0;
   } else {
     // Non-uniform scaling for laptop to perfectly match the shrink card
