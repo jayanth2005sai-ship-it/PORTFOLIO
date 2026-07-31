@@ -1903,7 +1903,7 @@ p {
 
   #how-section {
     overflow: visible;
-    padding-bottom: 20rem; /* Push footer down on mobile */
+    padding-bottom: 45rem; /* Push footer down on mobile */
   }
 
   .stats-left,
