@@ -29,7 +29,7 @@ const LAPTOP_CONFIG = {
   screenWidth: 2.15,
   screenHeight: 1.25,
   // The vertical offset of the laptop screen center from the laptop's origin
-  screenCenterY: 0.65 
+  screenCenterY: 0.65
 };
 
 // TUNE THESE VALUES TO PERFECTLY MATCH YOUR MOBILE.GLB MODEL
@@ -38,21 +38,21 @@ const MOBILE_CONFIG = {
   screenWidth: 2.1,
   screenHeight: 4.5,
   // The vertical offset of the mobile screen center from the model's origin
-  screenCenterY: 0.0 
+  screenCenterY: 0.0
 };
 
 const SECTIONS = {
-  hidden: { x: 0,   y: -1.5, z: 0,    scaleX: 0.1, scaleY: 0.1, scaleZ: 0.1 },
-  frame:  { x: 0,   y: 0,    z: 0,    scaleX: 1.0, scaleY: 1.0, scaleZ: 1.0 }, // Overwritten by resize
-  hero:   { x: 0.0, y: -0.45,z: 0,    scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
-  stats:  { x: 2.2, y: 0.0,  z: 0,    scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
-  how:    { x:-2.2, y: 0.0,  z: 0,    scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
+  hidden: { x: 0, y: -1.5, z: 0, scaleX: 0.1, scaleY: 0.1, scaleZ: 0.1 },
+  frame: { x: 0, y: 0, z: 0, scaleX: 1.0, scaleY: 1.0, scaleZ: 1.0 }, // Overwritten by resize
+  hero: { x: 0.0, y: -0.45, z: 0, scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
+  stats: { x: 2.2, y: 0.0, z: 0, scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
+  how: { x: -2.2, y: 0.0, z: 0, scaleX: BALL_SCALE, scaleY: BALL_SCALE, scaleZ: BALL_SCALE },
   footer: { x: 2.5, y: -1.3, z: -2.0, scaleX: FOOTER_SCALE, scaleY: FOOTER_SCALE, scaleZ: FOOTER_SCALE },
 };
 
 function init() {
   const canvas = document.getElementById('hero-canvas');
-  
+
   // Renderer setup
   renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -73,15 +73,15 @@ function init() {
 
   // Lighting
   scene.add(new THREE.AmbientLight(0xfff0dd, 0.55));
-  
+
   const keyLight = new THREE.DirectionalLight(0xffeedd, 1.6);
   keyLight.position.set(-2, 4, 5);
   scene.add(keyLight);
-  
+
   const fillLight = new THREE.DirectionalLight(0xf5e8d0, 0.35);
   fillLight.position.set(4, 1, -2);
   scene.add(fillLight);
-  
+
   const hemiLight = new THREE.HemisphereLight(0xfff0dd, 0xcfc0ae, 0.4);
   scene.add(hemiLight);
 
@@ -102,15 +102,15 @@ function init() {
     // Center the model
     const box = new THREE.Box3().setFromObject(ball);
     ball.position.sub(box.getCenter(new THREE.Vector3()));
-    
+
     // Normalize scale so ball's longest axis = 2.4 units
     const size = box.getSize(new THREE.Vector3());
     baseScale = 2.4 / Math.max(size.x, size.y, size.z);
-    
-    ball.scale.set(baseScale * SECTIONS.hidden.scaleX, baseScale * SECTIONS.hidden.scaleY, baseScale * SECTIONS.hidden.scaleZ); 
-    ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z); 
+
+    ball.scale.set(baseScale * SECTIONS.hidden.scaleX, baseScale * SECTIONS.hidden.scaleY, baseScale * SECTIONS.hidden.scaleZ);
+    ball.position.set(SECTIONS.hidden.x, SECTIONS.hidden.y, SECTIONS.hidden.z);
     if (isMobile) ball.rotation.y = Math.PI;
-    
+
     // Material overrides
     ball.traverse((child) => {
       if (child.isMesh && child.material) {
@@ -163,6 +163,10 @@ function setupInteractions(canvas) {
   const onPointerDown = (e) => {
     if (!canvas.classList.contains('drag-enabled')) return;
     
+    if (e.target && e.target.closest && e.target.closest('button, a, .btn, .pricing-btn, .mobile-profile-pill, .ph-pill, .social-pill, .social-links, .nav-links')) {
+      return;
+    }
+
     const clientX = e.clientX ?? e.touches[0].clientX;
     const clientY = e.clientY ?? e.touches[0].clientY;
 
@@ -188,9 +192,22 @@ function setupInteractions(canvas) {
         mouse.x = (clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObject(ball, true);
-        if (intersects.length > 0 || isDragging) {
-          canvas.classList.add('is-hovering');
+        
+        const elementsUnderMouse = document.elementsFromPoint(clientX, clientY);
+        const isHoveringInteractive = !isDragging && elementsUnderMouse.some(el => {
+          if (!el || !el.tagName) return false;
+          const tag = el.tagName.toLowerCase();
+          return tag === 'button' || tag === 'a' || 
+                 el.closest('button, a, .btn, .pricing-btn, .mobile-profile-pill, .ph-pill, .social-pill, .social-links, .nav-links');
+        });
+
+        if (!isHoveringInteractive) {
+          const intersects = raycaster.intersectObject(ball, true);
+          if (intersects.length > 0 || isDragging) {
+            canvas.classList.add('is-hovering');
+          } else {
+            canvas.classList.remove('is-hovering');
+          }
         } else {
           canvas.classList.remove('is-hovering');
         }
@@ -200,20 +217,20 @@ function setupInteractions(canvas) {
     }
 
     if (!isDragging) return;
-    
+
     // Prevent page scroll when interacting with the 3D model on mobile
     if (isMobile && e.cancelable) {
       e.preventDefault();
     }
-    
+
     velocity.x = (clientY - previousMousePosition.y) * 0.006;
     velocity.y = (clientX - previousMousePosition.x) * 0.006;
-    
+
     if (ball) {
       ball.rotation.x += velocity.x;
       ball.rotation.y += velocity.y;
     }
-    
+
     previousMousePosition = { x: clientX, y: clientY };
   };
 
@@ -270,32 +287,32 @@ function setupGSAP() {
         }
 
         if (ballLoaded && ball) {
-           let p = Math.min(self.progress / 0.8, 1);
-           p = gsap.parseEase('power2.inOut')(p);
-           
-           ball.position.x = gsap.utils.interpolate(SECTIONS.hidden.x, SECTIONS.frame.x, p);
-           ball.position.y = gsap.utils.interpolate(SECTIONS.hidden.y, SECTIONS.frame.y, p);
-           ball.position.z = gsap.utils.interpolate(SECTIONS.hidden.z, SECTIONS.frame.z, p);
-           ball.scale.set(
-             baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleX, SECTIONS.frame.scaleX, p),
-             baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleY, SECTIONS.frame.scaleY, p),
-             baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleZ, SECTIONS.frame.scaleZ, p)
-           );
-           
-           const targetX = gsap.utils.interpolate(0.3, 0.05, p);
-           gsap.to(ball.rotation, {
-             x: targetX,
-             y: isMobile ? Math.PI : 0,
-             z: 0,
-             duration: 0.8,
-             ease: 'power3.out',
-             overwrite: 'auto'
-           });
+          let p = Math.min(self.progress / 0.8, 1);
+          p = gsap.parseEase('power2.inOut')(p);
+
+          ball.position.x = gsap.utils.interpolate(SECTIONS.hidden.x, SECTIONS.frame.x, p);
+          ball.position.y = gsap.utils.interpolate(SECTIONS.hidden.y, SECTIONS.frame.y, p);
+          ball.position.z = gsap.utils.interpolate(SECTIONS.hidden.z, SECTIONS.frame.z, p);
+          ball.scale.set(
+            baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleX, SECTIONS.frame.scaleX, p),
+            baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleY, SECTIONS.frame.scaleY, p),
+            baseScale * gsap.utils.interpolate(SECTIONS.hidden.scaleZ, SECTIONS.frame.scaleZ, p)
+          );
+
+          const targetX = gsap.utils.interpolate(0.3, 0.05, p);
+          gsap.to(ball.rotation, {
+            x: targetX,
+            y: isMobile ? Math.PI : 0,
+            z: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            overwrite: 'auto'
+          });
         }
       }
     }
   });
-  
+
   heroCardTl.to('.hero-card', {
     scale: 0.45,
     y: () => '-8.4dvh',
@@ -303,18 +320,18 @@ function setupGSAP() {
     ease: 'none',
     duration: 0.8 // Finishes at 80% of the total pinned scroll
   }, 0)
-  .to('.sig-draw', {
-    strokeDashoffset: 0,
-    ease: 'power2.out',
-    duration: 0.8,
-    stagger: 0.1
-  }, 0)
-  .to({}, { duration: 0.2 }); // Hold the fully shrunk state for the last 20%
+    .to('.sig-draw', {
+      strokeDashoffset: 0,
+      ease: 'power2.out',
+      duration: 0.8,
+      stagger: 0.1
+    }, 0)
+    .to({}, { duration: 0.2 }); // Hold the fully shrunk state for the last 20%
 
   const navTl = gsap.timeline({ delay: 0.15 });
   navTl.to('.nav-logo', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.1)
-       .to('.nav-links', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.15)
-       .to('.profile-btn', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.2);
+    .to('.nav-links', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.15)
+    .to('.profile-btn', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.2);
 
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -322,7 +339,7 @@ function setupGSAP() {
       start: 'top 65%',
     }
   });
-  
+
   tl.to('#ph-badge', { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 0.4)
     .to('#event-card', { opacity: 1, x: 0, duration: 1.1, ease: 'expo.out' }, 0.55)
     .to('#hero-text', { opacity: 1, x: 0, duration: 1.1, ease: 'expo.out' }, 0.65)
@@ -362,10 +379,10 @@ function setupGSAP() {
 
 function setupScrollBall() {
   const depthOffset = (y) => (y < 0 ? y * 0.5 : 0);
-  
+
   const updateBallPosition = (progress, sectionA, sectionB) => {
     if (!ballLoaded) return;
-    
+
     // Kill any active entrance tweens so scroll triggers take priority
     gsap.killTweensOf(ball.position);
     gsap.killTweensOf(ball.scale);
@@ -377,13 +394,13 @@ function setupScrollBall() {
     const scaleX = gsap.utils.interpolate(sectionA.scaleX, sectionB.scaleX, progress);
     const scaleY = gsap.utils.interpolate(sectionA.scaleY, sectionB.scaleY, progress);
     const scaleZ = gsap.utils.interpolate(sectionA.scaleZ, sectionB.scaleZ, progress);
-    
+
     ball.position.set(x, y, z);
     ball.scale.set(baseScale * scaleX, baseScale * scaleY, baseScale * scaleZ);
   };
 
   const canvas = document.getElementById('hero-canvas');
-  
+
   const toggleDrag = (section) => {
     currentSection = section;
     if (section !== 'new-hero') {
@@ -409,16 +426,16 @@ function setupScrollBall() {
         ball.rotation.x %= 2 * Math.PI;
         ball.rotation.y %= 2 * Math.PI;
         ball.rotation.z %= 2 * Math.PI;
-        
+
         if (ball.rotation.x > Math.PI) ball.rotation.x -= 2 * Math.PI;
         else if (ball.rotation.x < -Math.PI) ball.rotation.x += 2 * Math.PI;
-        
+
         while (ball.rotation.y > targetY + Math.PI) ball.rotation.y -= 2 * Math.PI;
         while (ball.rotation.y < targetY - Math.PI) ball.rotation.y += 2 * Math.PI;
-        
+
         if (ball.rotation.z > Math.PI) ball.rotation.z -= 2 * Math.PI;
         else if (ball.rotation.z < -Math.PI) ball.rotation.z += 2 * Math.PI;
-        
+
         gsap.to(ball.rotation, { x: 0.05, y: targetY, z: 0, duration: 1.5, ease: 'power3.out', overwrite: 'auto' });
       }
     }
@@ -456,11 +473,11 @@ function setupScrollBall() {
   // How to Footer
   const footerVelocityAnim = gsap.fromTo('.velocity-content',
     { scale: 1, x: '0vw', y: '0dvh' },
-    { 
-      scale: () => window.innerWidth <= 768 ? 1 : 0.4, 
-      x: () => window.innerWidth <= 768 ? '0vw' : '25vw', 
-      y: () => window.innerWidth <= 768 ? '20dvh' : '25dvh', 
-      ease: 'none' 
+    {
+      scale: () => window.innerWidth <= 768 ? 1 : 0.4,
+      x: () => window.innerWidth <= 768 ? '0vw' : '25vw',
+      y: () => window.innerWidth <= 768 ? '20dvh' : '25dvh',
+      ease: 'none'
     }
   );
 
@@ -500,35 +517,35 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  
+
   // Dynamically calculate the laptop scale to fit the 0.45 scaled hero card
   // 3D frustum height at z=0 is approx 3.154 units (fov=32, dist=5.5). Card takes 45%.
   const aspect = window.innerWidth / window.innerHeight;
   const cardRequiredW = 1.4194 * aspect;
   const cardRequiredH = 1.4194;
-  
+
   // Scale the model so its screen perfectly contains the shrunk card
   const config = isMobile ? MOBILE_CONFIG : LAPTOP_CONFIG;
   const scaleW = cardRequiredW / config.screenWidth;
   const scaleH = cardRequiredH / config.screenHeight;
-  
+
   if (isMobile) {
     // Non-uniform scaling to match the card's edges on mobile, with a small padding
     const PADDING_FACTOR = 1.3; // Increased significantly
     const WIDER_FACTOR = 1.65; // Even wider as requested (aggressively wide)
     const TALLER_FACTOR = 1.55; // Increased scale to make it even taller
-    
+
     const baseScaleY = scaleH * PADDING_FACTOR;
     SECTIONS.frame.scaleX = scaleW * PADDING_FACTOR * WIDER_FACTOR;
     SECTIONS.frame.scaleY = baseScaleY * TALLER_FACTOR;
     SECTIONS.frame.scaleZ = ((scaleW + scaleH) / 2) * PADDING_FACTOR;
-    
+
     // Default Y position
     const oldY = -(baseScaleY * config.screenCenterY);
     // Shift down (reduced multiplier to move it very slightly up)
-    const shiftDown = (TALLER_FACTOR - 1) * 0.95; 
+    const shiftDown = (TALLER_FACTOR - 1) * 0.95;
     SECTIONS.frame.y = oldY - shiftDown;
-    
+
     // Dynamically scale and position the hero center to prevent overlapping text
     const heroCenter = document.querySelector('.hero-center');
     if (heroCenter) {
@@ -539,11 +556,11 @@ function onWindowResize() {
       let newScale = Math.min(availH / 650, availW / 650, 0.65);
       newScale = Math.max(newScale, 0.35);
       const topPct = ((100 + (availH / 2)) / vh) * 100;
-      
+
       heroCenter.style.transform = `translate(-50%, -50%) scale(${newScale})`;
       heroCenter.style.top = `${topPct}%`;
     }
-    
+
     // Decrease the size and bring down the mobile 3d model in the summary/hero page
     const mobileModelScale = 0.65;
     SECTIONS.hero.scaleX = mobileModelScale;
@@ -569,13 +586,13 @@ function onWindowResize() {
     SECTIONS.frame.scaleX = scaleW - widthReduction;
     SECTIONS.frame.scaleY = scaleH;
     SECTIONS.frame.scaleZ = (scaleW + scaleH) / 2; // Keep Z roughly proportional
-    
+
     // The hero card is offset by -8.4dvh (moves UP in DOM, so +y in 3D)
     // 8.4vh of 3.154 3D units = 0.2649
     SECTIONS.frame.y = -scaleH * config.screenCenterY + (3.154 * 0.084) - 0.2; // Shift down slightly
     // Shift right by half the width reduction to keep the right edge in place
     SECTIONS.frame.x = 0.45 + (widthReduction / 2);
-    
+
     const heroCenter = document.querySelector('.hero-center');
     if (heroCenter) {
       heroCenter.style.transform = '';
@@ -607,7 +624,7 @@ function onWindowResize() {
 let lastTime = 0;
 function animate(time) {
   requestAnimationFrame(animate);
-  
+
   const delta = time - lastTime;
   lastTime = time;
 
@@ -616,7 +633,7 @@ function animate(time) {
   scrollers.forEach((scroller) => {
     let baseSpeed = parseFloat(scroller.dataset.speed || 1);
     let dir = parseInt(scroller.dataset.direction || 1);
-    
+
     // Adjust direction based on scroll velocity direction
     if (scrollVelocity < -20) scrollDirection = -1;
     else if (scrollVelocity > 20) scrollDirection = 1;
@@ -626,10 +643,10 @@ function animate(time) {
 
     // moveBy incorporates base speed and scroll velocity boost
     let moveBy = dir * baseSpeed * scrollDirection * (1 + velocityFactor) * (delta / 16);
-    
+
     let currentX = parseFloat(scroller.dataset.x || 0);
     currentX += moveBy;
-    
+
     const firstSpan = scroller.firstElementChild;
     if (firstSpan) {
       const spanWidth = firstSpan.offsetWidth;
@@ -644,7 +661,7 @@ function animate(time) {
 
   // Decay scroll velocity smoothly
   scrollVelocity *= 0.9;
-  
+
   if (ball) {
     if (currentSection === 'new-hero') {
       // Do not apply auto velocity while pinned
@@ -652,18 +669,18 @@ function animate(time) {
       // Momentum decay
       velocity.x *= DAMPING;
       velocity.y *= DAMPING;
-      
+
       // If momentum is dead, apply auto velocity based on last direction
       if (Math.abs(velocity.x) < 0.0005 && Math.abs(velocity.y) < 0.0005) {
         if (Math.abs(velocity.x) > 0 || Math.abs(velocity.y) > 0) {
           autoVel.x = (velocity.x > 0 ? 1 : -1) * (Math.abs(velocity.x) + 0.0005);
           autoVel.y = (velocity.y > 0 ? 1 : -1) * (Math.abs(velocity.y) + 0.0005);
-          
+
           // Cap speeds
           autoVel.x = Math.max(Math.min(autoVel.x, 0.01), -0.01);
           autoVel.y = Math.max(Math.min(autoVel.y, 0.01), -0.01);
         }
-        
+
         ball.rotation.x += autoVel.x;
         ball.rotation.y += autoVel.y;
       } else {
@@ -672,7 +689,7 @@ function animate(time) {
       }
     }
   }
-  
+
   renderer.render(scene, camera);
 }
 
@@ -687,16 +704,16 @@ const initClickSpark = () => {
   const canvas = document.getElementById('click-spark-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  
+
   let sparks = [];
-  
-  const sparkColor = '#ffffff'; 
+
+  const sparkColor = '#ffffff';
   const sparkSize = 15;
   const sparkRadius = 25;
   const sparkCount = 8;
   const duration = 500;
   const extraScale = 1.0;
-  
+
   const easeFunc = t => t * (2 - t);
 
   const resizeCanvas = () => {
@@ -760,12 +777,12 @@ const initCardSwap = () => {
   const container = document.querySelector('.card-swap-container');
   if (!container) return;
   const cards = Array.from(container.querySelectorAll('.card'));
-  
+
   const cardDistance = 60;
   const verticalDistance = -70;
   const delay = 5000;
   const skewAmount = 6;
-  
+
   const config = {
     ease: 'elastic.out(0.6,0.9)',
     durDrop: 2,
@@ -774,7 +791,7 @@ const initCardSwap = () => {
     promoteOverlap: 0.9,
     returnDelay: 0.05
   };
-  
+
   const makeSlot = (i, distX, distY, total) => {
     // Center the stack by offsetting by half the total distance
     const offsetX = ((total - 1) * distX) / 2;
@@ -786,7 +803,7 @@ const initCardSwap = () => {
       zIndex: total - i
     };
   };
-  
+
   const placeNow = (el, slot, skew) =>
     gsap.set(el, {
       x: slot.x,
@@ -799,15 +816,15 @@ const initCardSwap = () => {
       zIndex: slot.zIndex,
       force3D: true
     });
-    
+
   const total = cards.length;
   let order = cards.map((_, i) => i);
-  
+
   cards.forEach((card, i) => placeNow(card, makeSlot(i, cardDistance, verticalDistance, total), skewAmount));
-  
+
   let tl;
   let interval;
-  
+
   const projectData = [
     {
       eyebrow: "FEATURED WORK",
@@ -836,7 +853,7 @@ const initCardSwap = () => {
 
   const updateText = (newFront) => {
     const data = projectData[newFront % projectData.length];
-    
+
     gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p', '#project-github-btn'], {
       opacity: 0,
       y: -10,
@@ -847,7 +864,7 @@ const initCardSwap = () => {
         const h2El = document.querySelector('.how-content h2');
         const pEl = document.querySelector('.how-content p');
         const btnEl = document.getElementById('project-github-btn');
-        
+
         if (eyebrowEl) eyebrowEl.innerHTML = data.eyebrow;
         if (h2El) h2El.innerHTML = data.title;
         if (pEl) pEl.innerHTML = data.desc;
@@ -859,7 +876,7 @@ const initCardSwap = () => {
             btnEl.style.display = 'none';
           }
         }
-        
+
         gsap.to(['.how-content .eyebrow', '.how-content h2', '.how-content p', '#project-github-btn'], {
           opacity: 1,
           y: 0,
@@ -872,17 +889,17 @@ const initCardSwap = () => {
 
   const swap = (count = 1) => {
     if (order.length < 2) return;
-    
+
     if (tl && tl.isActive()) {
       tl.progress(1);
       tl.kill();
     }
-    
+
     const dropped = order.slice(0, count);
     const rest = order.slice(count);
-    
+
     tl = gsap.timeline();
-    
+
     dropped.forEach((idx, i) => {
       const el = cards[idx];
       tl.to(el, {
@@ -891,7 +908,7 @@ const initCardSwap = () => {
         ease: config.ease
       }, i * 0.05);
     });
-    
+
     tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
     rest.forEach((idx, i) => {
       const el = cards[idx];
@@ -909,7 +926,7 @@ const initCardSwap = () => {
         `promote+=${i * 0.1}`
       );
     });
-    
+
     tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
     dropped.forEach((idx, i) => {
       const el = cards[idx];
@@ -928,15 +945,15 @@ const initCardSwap = () => {
         `return+=${i * 0.05}`
       );
     });
-    
+
     order = [...rest, ...dropped];
     updateText(order[0]);
   };
-  
+
   // Start after a slight delay or initially
   updateText(order[0]);
   interval = setInterval(() => swap(1), delay);
-  
+
   container.addEventListener('mouseenter', () => {
     tl?.pause();
     clearInterval(interval);
@@ -962,8 +979,8 @@ function initCircularText() {
   if (!container) return;
   const text = "FULL STACK DEVELOPER • UI/UX DESIGNER • ";
   const letters = text.split('');
-  const radius = 300; 
-  
+  const radius = 300;
+
   letters.forEach((letter, i) => {
     const span = document.createElement('span');
     span.innerText = letter;
@@ -994,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileMenu = document.getElementById('flowing-mobile-menu');
   const closeMenuBtn = document.getElementById('close-mobile-menu');
   const menuBackdrop = document.getElementById('mobile-menu-backdrop');
-  
+
   if (mobileBtn && mobileMenu) {
     const closeMenu = () => {
       mobileMenu.classList.remove('active');
@@ -1008,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (menuBackdrop) menuBackdrop.classList.add('active');
       document.body.style.overflow = 'hidden';
     });
-    
+
     closeMenuBtn?.addEventListener('click', closeMenu);
     menuBackdrop?.addEventListener('click', closeMenu);
   }
@@ -1016,13 +1033,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const items = document.querySelectorAll('.menu__item');
   const speed = 15;
   const animationDefaults = { duration: 0.6, ease: 'expo.out' };
-  
+
   const distMetric = (x, y, x2, y2) => {
     const xDiff = x - x2;
     const yDiff = y - y2;
     return xDiff * xDiff + yDiff * yDiff;
   };
-  
+
   const findClosestEdge = (mouseX, mouseY, width, height) => {
     const topEdgeDist = distMetric(mouseX, mouseY, width / 2, 0);
     const bottomEdgeDist = distMetric(mouseX, mouseY, width / 2, height);
@@ -1033,7 +1050,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = item.getAttribute('data-text');
     const image = item.getAttribute('data-image');
     const link = item.getAttribute('data-link');
-    
+
     item.innerHTML = `
       <a class="menu__item-link" href="${link}">${text}</a>
       <div class="marquee">
@@ -1042,10 +1059,10 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
-    
+
     const marqueeInner = item.querySelector('.marquee__inner');
     const marquee = item.querySelector('.marquee');
-    
+
     const updateRepetitions = () => {
       if (!marqueeInner) return;
       marqueeInner.innerHTML = `
@@ -1056,13 +1073,13 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       const part = marqueeInner.querySelector('.marquee__part');
       if (!part) return;
-      
+
       const partWidth = part.offsetWidth;
       if (partWidth === 0) return;
-      
+
       const needed = Math.ceil(window.innerWidth / partWidth) + 2;
       const reps = Math.max(4, needed);
-      
+
       let html = '';
       for (let i = 0; i < reps; i++) {
         html += `
@@ -1073,7 +1090,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }
       marqueeInner.innerHTML = html;
-      
+
       gsap.killTweensOf(marqueeInner);
       gsap.to(marqueeInner, {
         x: -partWidth,
@@ -1117,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     item.addEventListener('mouseenter', handleEnter);
     item.addEventListener('mouseleave', handleLeave);
-    
+
     item.addEventListener('touchstart', handleEnter, { passive: true });
     item.addEventListener('touchend', (e) => {
       setTimeout(() => handleLeave(e), 200);
@@ -1158,7 +1175,7 @@ const initLanyard = () => {
     const rect = lanyardWrapper.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    
+
     // Springy elastic movement
     gsap.to(lanyardCard, {
       rotateY: (x / rect.width) * 45,
@@ -1187,7 +1204,7 @@ const initLanyard = () => {
       duration: 2.5,
       ease: 'elastic.out(1, 0.2)'
     });
-    
+
     // Reset glare
     if (glare) {
       gsap.to(glare, {
