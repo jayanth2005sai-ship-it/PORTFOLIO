@@ -2138,10 +2138,25 @@ p {
     transform: translate(0, -75px);
   }
 
-  .floating-tag,
   .bg-text-full,
   .bg-text-stack {
     display: none;
+  }
+
+  .floating-tag {
+    display: block; /* Ensure it's visible on mobile */
+    font-size: 1.25rem;
+    padding: 1rem 2rem;
+  }
+
+  .tag-left {
+    top: 2%;
+    left: 2%;
+  }
+
+  .tag-right {
+    top: -8%;
+    right: 2%;
   }
 
   .hero-bottom-left {
