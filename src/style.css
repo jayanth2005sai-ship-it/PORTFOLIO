@@ -3085,3 +3085,14 @@ p {
   background: var(--neon-green);
   color: var(--ink);
 }
+
+/* --- Laptop UI Interface adjustments --- */
+@media (min-width: 1024px) {
+  .card-swap-container {
+    bottom: -25vh; /* Shifts swap cards further down */
+  }
+
+  #site-footer {
+    margin-top: 0rem; /* Moves footer slightly down again */
+  }
+}
