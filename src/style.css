@@ -2433,6 +2433,14 @@ p {
     display: none !important;
   }
 
+  #mobile-menu-btn {
+    display: block !important;
+  }
+
+  .profile-btn {
+    display: none !important;
+  }
+
   .menu-backdrop {
     display: block;
     position: fixed;

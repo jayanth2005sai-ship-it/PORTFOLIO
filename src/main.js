@@ -330,7 +330,7 @@ function setupGSAP() {
 
   const navTl = gsap.timeline({ delay: 0.15 });
   navTl.to('.nav-logo', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.1)
-    .to('.nav-links', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.15)
+    .to('.nav-links, #mobile-menu-btn', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.15)
     .to('.profile-btn', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.2);
 
   const tl = gsap.timeline({
