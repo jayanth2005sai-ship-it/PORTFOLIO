@@ -963,12 +963,52 @@ const initCardSwap = () => {
     interval = setInterval(() => swap(1), delay);
   });
 
+  const modal = document.getElementById('image-modal');
+  const modalImg = document.getElementById('modal-img');
+  const modalCaption = document.getElementById('modal-caption');
+  const modalClose = document.getElementById('modal-close-btn');
+
+  if (modal && modalClose) {
+    modalClose.addEventListener('click', () => {
+      modal.classList.remove('show');
+      setTimeout(() => { modal.style.display = 'none'; }, 300);
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('show');
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
+      }
+    });
+  }
+
   cards.forEach((card, originalIdx) => {
     card.style.cursor = 'pointer';
     card.addEventListener('click', () => {
       const currentPos = order.indexOf(originalIdx);
       if (currentPos > 0) {
         swap(currentPos);
+      }
+    });
+
+    card.addEventListener('dblclick', () => {
+      if (!modal || !modalImg) return;
+      
+      const cardBody = card.querySelector('.card-body');
+      const titleEl = card.querySelector('.card-title');
+      
+      if (cardBody) {
+        const bgImg = cardBody.style.backgroundImage;
+        if (bgImg && bgImg !== 'none') {
+          const urlMatch = bgImg.match(/url\(['"]?(.*?)['"]?\)/);
+          if (urlMatch && urlMatch[1]) {
+            modalImg.src = urlMatch[1];
+            modalCaption.innerHTML = titleEl ? titleEl.innerHTML : '';
+            modal.style.display = 'flex';
+            setTimeout(() => {
+              modal.classList.add('show');
+            }, 10);
+          }
+        }
       }
     });
   });

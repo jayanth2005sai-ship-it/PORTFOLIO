@@ -293,7 +293,7 @@
             </span>
             <span class="card-title">Shopping Trends</span>
           </div>
-          <div class="card-body" style="background-image: url('/shopping_data_trends.png'); background-size: cover;">
+          <div class="card-body" style="background-image: url('/shopping_data_trends.png'); background-size: contain; background-position: center; background-repeat: no-repeat;">
           </div>
         </div>
         <div class="card">
@@ -304,7 +304,7 @@
             <span class="card-title">IGNITE</span>
           </div>
           <div class="card-body"
-            style="background-image: url('/ignite.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            style="background-image: url('/ignite.png'); background-size: contain; background-position: center; background-repeat: no-repeat;">
           </div>
         </div>
         <div class="card">
@@ -449,6 +449,13 @@
         </div>
       </div>
     </footer>
+  </div>
+
+  <!-- Image Modal for Swap Cards -->
+  <div id="image-modal" class="modal-overlay">
+    <span class="modal-close" id="modal-close-btn">&times;</span>
+    <img class="modal-content" id="modal-img">
+    <div id="modal-caption"></div>
   </div>
 
   <!-- Global ClickSpark Canvas -->
