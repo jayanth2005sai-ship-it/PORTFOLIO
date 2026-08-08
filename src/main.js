@@ -320,6 +320,11 @@ function setupGSAP() {
     ease: 'none',
     duration: 0.8 // Finishes at 80% of the total pinned scroll
   }, 0)
+    .to('.hero-card', {
+      opacity: 0,
+      duration: 0.1,
+      ease: 'power2.inOut'
+    }, 0.7)
     .to('.sig-draw', {
       strokeDashoffset: 0,
       ease: 'power2.out',
